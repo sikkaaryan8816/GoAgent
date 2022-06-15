@@ -1,4 +1,4 @@
-package cavlambda
+package index
 
 import "fmt"
 

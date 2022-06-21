@@ -19,9 +19,9 @@ type encryptionEngine interface {
 }
 func WrapHandler(handler interface{}) interface{} {
 
-	fmt.Println("Hello from wraphandler")
+	fmt.Println("Hello from wraphandler",handler)
 	handlercall()
-
+	
 	return handler
 }
 func handlercall() (LambdaResponse, error) {

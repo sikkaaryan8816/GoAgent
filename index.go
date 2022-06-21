@@ -24,7 +24,7 @@ func WrapHandler(handler interface{}) interface{} {
 
 	return handler
 }
-func Handler() (LambdaResponse, error) {
+func handlercall() (LambdaResponse, error) {
         resp := LambdaResponse{}
 
         // Load Cipher plugin

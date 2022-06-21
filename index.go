@@ -19,7 +19,7 @@ type encryptionEngine interface {
 }
 func WrapHandler(handler interface{}) interface{} {
 
-	fmt.Println("Hello from wraphandler",*handler)
+	fmt.Printf("Hello from wraphandler= %v ",handler)
 	handlercall()
 	
 	return handler

@@ -17,7 +17,7 @@ type encryptionEngine interface {
         Encrypt(string) string
         Decrypt() (*string, error)
 }
-func WrapHandler(handler string) interface{} {
+func WrapHandler(handler interface{}) interface{} {
 
 	fmt.Println("Hello from wraphandler= %v ",handler)
 	handlercall()

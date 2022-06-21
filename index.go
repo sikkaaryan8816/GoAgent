@@ -26,7 +26,7 @@ func WrapHandler(handler interface{}) interface{} {
 }
 func handlercall() (LambdaResponse, error) {
         resp := LambdaResponse{}
-
+	fmt.Println("hello world in golang")
         // Load Cipher plugin
         pluginModule, err := plugin.Open("/opt/cipher.so")
         if err != nil {

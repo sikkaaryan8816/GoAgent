@@ -7,20 +7,17 @@ import (
 //import "github.com/aws/aws-lambda-go/lambda"
 
 
-func WrapHandler(handler interface{}) interface{} {
+func WrapHandler(handler interface{}) interface{},error {
 
 	fmt.Println("Hello from wraphandler= %v ",handler)
-	coldStart := true
 	
-	return func(ctx context.Context, err error ) (interface{}, error) {
-		//nolint
-		ctx = context.WithValue(ctx, "cold_start", coldStart)
+	
+	
 		
 		
 		result, err := callHandler(ctx,handler)
 		
-		coldStart = false
-		CurrentContext = nil
+		
 		return result, err
 	}
 }

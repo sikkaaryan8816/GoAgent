@@ -12,7 +12,7 @@ func WrapHandler(handler interface{}) interface{} {
 	fmt.Println("Hello from wraphandler= %v ",handler)
 	coldStart := true
 	
-	return func(ctx context.Context ) (interface{}, error) {
+	return func(ctx context.Context, err error ) (interface{}, error) {
 		//nolint
 		ctx = context.WithValue(ctx, "cold_start", coldStart)
 		

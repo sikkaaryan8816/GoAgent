@@ -109,7 +109,7 @@ func NewAIRecord() *aiRecord {
 	return &r
 }
 
-func UDPConnection() error {
+func UDPConnection()  {
 	
 	fmt.Println("udp_call")	
 	

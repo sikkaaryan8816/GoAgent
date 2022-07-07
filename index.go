@@ -3,25 +3,30 @@ package index
 import (
 	"fmt"
 	"context"
+	"encoding/json"
+	"errors"
+	"reflect"
 )
 //import "github.com/aws/aws-lambda-go/lambda"
 
+var (
+	// CurrentContext is the last create lambda context object.
+	CurrentContext context.Context
+)
 
 func WrapHandler(handler interface{}) interface{}  {
 
 	fmt.Println("Hello from wraphandler= %v ",handler)
 	
 	
-	
-		
-		
-		result := callHandler(ctx,handler)
-		
-		
-		return result 
-	
+	result, err := callHandler(ctx, msg, handler)
+	if err == nil {
+		fmt.Println("error")
+	}
+	return result
 }
-func callHandler(ctx context.Context, handler interface{}) interface{} {
+
+func callHandler(ctx context.Context, msg json.RawMessage, handler interface{}) (interface{}, error) {
 	
 	handlerType := reflect.TypeOf(handler)
 
@@ -46,15 +51,15 @@ func callHandler(ctx context.Context, handler interface{}) interface{} {
 	output := handlerValue.Call(args)
 
 	var response interface{}
-	//var errResponse error
+	var errResponse error
 
-	/*if len(output) > 0 {
+	if len(output) > 0 {
 		// If there are any output values, the last should always be an error
 		val := output[len(output)-1].Interface()
 		if errVal, ok := val.(error); ok {
 			errResponse = errVal
 		}
-	}*/
+	}
 
 	if len(output) > 1 {
 		// If there is more than one output value, the first should be the response payload.

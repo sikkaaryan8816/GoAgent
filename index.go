@@ -71,4 +71,25 @@ func callHandler(ctx context.Context, msg json.RawMessage, handler interface{}) 
 
 	return response, errResponse
 }
+func unmarshalEventForHandler(ev json.RawMessage, handler interface{}) (reflect.Value, error) {
+	handlerType := reflect.TypeOf(handler)
+	if handlerType.NumIn() == 0 {
+		return reflect.ValueOf(nil), nil
+	}
+
+	messageType := handlerType.In(handlerType.NumIn() - 1)
+	contextType := reflect.TypeOf((*context.Context)(nil)).Elem()
+	firstArgType := handlerType.In(0)
+
+	if handlerType.NumIn() == 1 && firstArgType.Implements(contextType) {
+		return reflect.ValueOf(nil), nil
+	}
+
+	newMessage := reflect.New(messageType)
+	err := json.Unmarshal(ev, newMessage.Interface())
+	if err != nil {
+		return reflect.ValueOf(nil), err
+	}
+	return newMessage, err
+}
 

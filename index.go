@@ -17,7 +17,7 @@ var (
 func WrapHandler(handler interface{}) interface{}  {
 
 	fmt.Println("Hello from wraphandler= %v ",handler)
-	
+	coldStart := true
 	
 	return func(ctx context.Context, msg json.RawMessage) (interface{}, error) {
 		//nolint

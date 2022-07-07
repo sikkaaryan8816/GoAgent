@@ -1,4 +1,4 @@
-package main
+package index
 /*
 #include <stdio.h>
 #include <unistd.h>

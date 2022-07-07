@@ -18,7 +18,7 @@ func WrapHandler(handler interface{}) interface{}  {
 
 	fmt.Println("Hello from wraphandler= %v ",handler)
 	coldStart := true
-	UDPConnection()
+
 	
 	return func(ctx context.Context, msg json.RawMessage) (interface{}, error) {
 		//nolint
@@ -26,6 +26,7 @@ func WrapHandler(handler interface{}) interface{}  {
 		/*for _, listener := range listeners {
 			ctx = listener.HandlerStarted(ctx, msg)
 		}*/
+		UDPConnection()
 		CurrentContext = ctx
 		result, err := callHandler(ctx, msg, handler)
 		/*for _, listener := range listeners {

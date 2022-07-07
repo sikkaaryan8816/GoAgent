@@ -27,7 +27,10 @@ func WrapHandler(handler interface{}) interface{}  {
 }
 
 func callHandler(ctx context.Context, msg json.RawMessage, handler interface{}) (interface{}, error) {
-	
+	ev, err := unmarshalEventForHandler(msg, handler)
+	if err != nil {
+		return nil, err
+	}
 	handlerType := reflect.TypeOf(handler)
 
 	args := []reflect.Value{}

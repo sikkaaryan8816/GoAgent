@@ -17,14 +17,23 @@ var (
 func WrapHandler(handler interface{}) interface{}  {
 
 	fmt.Println("Hello from wraphandler= %v ",handler)
-	var ctx context.Context 
-	var msg json.RawMessage
 	
-	result, err := callHandler(ctx, msg, handler)
-	if err == nil {
-		fmt.Println("error")
+	
+	return func(ctx context.Context, msg json.RawMessage) (interface{}, error) {
+		//nolint
+		ctx = context.WithValue(ctx, "cold_start", coldStart)
+		/*for _, listener := range listeners {
+			ctx = listener.HandlerStarted(ctx, msg)
+		}*/
+		CurrentContext = ctx
+		result, err := callHandler(ctx, msg, handler)
+		/*for _, listener := range listeners {
+			listener.HandlerFinished(ctx, err)
+		}*/
+		coldStart = false
+		CurrentContext = nil
+		return result, err
 	}
-	return result
 }
 
 func callHandler(ctx context.Context, msg json.RawMessage, handler interface{}) (interface{}, error) {

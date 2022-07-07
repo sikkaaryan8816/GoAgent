@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"context"
 	"encoding/json"
-	"errors"
+	//"errors"
 	"reflect"
 )
 //import "github.com/aws/aws-lambda-go/lambda"
@@ -17,7 +17,8 @@ var (
 func WrapHandler(handler interface{}) interface{}  {
 
 	fmt.Println("Hello from wraphandler= %v ",handler)
-	
+	var ctx context.Context 
+	var msg json.RawMessage
 	
 	result, err := callHandler(ctx, msg, handler)
 	if err == nil {

@@ -84,8 +84,10 @@ func main1(msgType int, ii int) {
 
 	
 	 _, err := aiRecObj.conn.Write(buf)
+	fmt.Println("udp_data_send")
         if err != nil {
             log.Fatal(err)
+	    fmt.Println("udp_data_not_send")
            
         }
       
@@ -109,7 +111,7 @@ func NewAIRecord() *aiRecord {
 
 func UDPConnection(){
 	
-	
+	fmt.Println("udp_call")	
 	
     aiRecObj = NewAIRecord()
     fmt.Println(aiRecObj)

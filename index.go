@@ -26,12 +26,27 @@ func WrapHandler(handler interface{}) interface{}  {
 		/*for _, listener := range listeners {
 			ctx = listener.HandlerStarted(ctx, msg)
 		}*/
-		UDPConnection()
+		//UDPConnection()
+		aws_request_id := "default_aws_request_id"
+		function_name := "defult"
+		url_path := context_obj.function_name
+	
+		bt := start_business_transaction(url_path,"") 
+	
+		handle, handler_name, mpackage := "test","Test","TEST"
+	
+		fqmmethodentry := "handle.main.Test"
+	
+		method_entry(bt,fqmmethodentry)
+		
 		CurrentContext = ctx
 		result, err := callHandler(ctx, msg, handler)
 		/*for _, listener := range listeners {
 			listener.HandlerFinished(ctx, err)
 		}*/
+		method_exit(bt,fqmmethodentry,200)
+	
+		end_business_transaction(bt)
 		coldStart = false
 		CurrentContext = nil
 		return result, err
@@ -104,4 +119,21 @@ func unmarshalEventForHandler(ev json.RawMessage, handler interface{}) (reflect.
 	}
 	return newMessage, err
 }
+
+func start_business_transaction(bt_name ,correlation_header string){
+		
+		UDPConnection()
+		message := create_start_transaction_message(context,bt_name,correlation_header)
+		udp_connection.send(massage,"start_fp")
+		bt := generate_bt()
+		
+		return bt
+}
+func end_business_transaction(bt int64){
+		message := create_end_transaction_message(context,bt,200)
+		udp_connection.send(massage)
+		rc := 0
+		return rc
+	}
+
 

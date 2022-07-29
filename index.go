@@ -31,7 +31,7 @@ func WrapHandler(handler interface{}) interface{} {
 		function_name := "http://10.20.0.85:81/PDO/pdo_test1.php"
 		url_path := function_name
 
-		start_business_transaction(url_path, "")
+		create_start_transaction_message(url_path, "")
 		//fmt.Println(bt)
 
 		handle, handler_name, mpackage := "test", "Test", "TEST"

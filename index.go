@@ -32,6 +32,7 @@ func WrapHandler(handler interface{}) interface{} {
 		url_path := function_name
 
 		bt := start_business_transaction(url_path, "")
+		fmt.Println(bt)
 
 		handle, handler_name, mpackage := "test", "Test", "TEST"
 

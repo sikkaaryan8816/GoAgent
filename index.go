@@ -34,9 +34,9 @@ func WrapHandler(handler interface{}) interface{} {
 		create_start_transaction_message(url_path, "")
 		//fmt.Println(bt)
 
-		handle, handler_name, mpackage := "test", "Test", "TEST"
+		//handle, handler_name, mpackage := "test", "Test", "TEST"
 
-		fqmmethodentry := "handle.main.Test"
+		//fqmmethodentry := "handle.main.Test"
 
 		//method_entry(bt, fqmmethodentry)
 		method_entry()

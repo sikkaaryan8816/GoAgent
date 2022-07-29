@@ -186,7 +186,7 @@ var buf = make([]byte, 1024)
 
 //func main() {
 func create_start_transaction_message(bt_name, nil string) {
-	bt_name := "defult"
+	//bt_name := "defult"
 	UDPConnection()
 
 	StartTransactionMessage(bt_name, "")

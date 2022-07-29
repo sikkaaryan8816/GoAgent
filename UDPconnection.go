@@ -194,8 +194,8 @@ func create_start_transaction_message(bt_name, nil string) {
 	//method_exit()
 	//end_business_transaction()
 	//fmt.Println(generate_bt())
-	bt := 1
-	return bt
+	//bt := 1
+	//return bt
 	//closeUDP()
 }
 

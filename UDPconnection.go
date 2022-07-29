@@ -114,7 +114,7 @@ func Header(buf []byte) C.int {
 	var awsReqId = "lksjskwjdkdldl"
 	var funcName = "lamdafunion_test1"
 	//var  agentType=0
-	var tags = "tierName=tier_test1;ndAppServerHost=server_test1;appName=lamdafunion_test1"
+	var tags = "tierName=tier_test1;ndAppServerHost=server_test1;appName=Abhimanyulambda_test1"
 	var wrapHeader wrapheader_t
 	wrapHeader.wrapheadervar.apiReqLen = (condition(apiReqId))
 	wrapHeader.wrapheadervar.awsReqLen = (condition(awsReqId))

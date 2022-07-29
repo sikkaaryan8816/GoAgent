@@ -27,12 +27,12 @@ func WrapHandler(handler interface{}) interface{} {
 			ctx = listener.HandlerStarted(ctx, msg)
 		}*/
 
-		aws_request_id := "default_aws_request_id"
+		//aws_request_id := "default_aws_request_id"
 		function_name := "http://10.20.0.85:81/PDO/pdo_test1.php"
 		url_path := function_name
 
-		bt := start_business_transaction(url_path, "")
-		fmt.Println(bt)
+		start_business_transaction(url_path, "")
+		//fmt.Println(bt)
 
 		handle, handler_name, mpackage := "test", "Test", "TEST"
 
@@ -123,7 +123,7 @@ func unmarshalEventForHandler(ev json.RawMessage, handler interface{}) (reflect.
 	return newMessage, err
 }
 
-func start_business_transaction(bt_name, correlation_header string) {
+/*func start_business_transaction(bt_name, correlation_header string) {
 
 	message := create_start_transaction_message(ctx, bt_name, correlation_header)
 	udp_connection.send(massage, "start_fp")
@@ -136,4 +136,4 @@ func end_business_transaction(bt int64) {
 	udp_connection.send(massage)
 	rc := 0
 	return rc
-}
+}*/

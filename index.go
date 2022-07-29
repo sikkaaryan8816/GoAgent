@@ -37,16 +37,18 @@ func WrapHandler(handler interface{}) interface{} {
 
 		fqmmethodentry := "handle.main.Test"
 
-		method_entry(bt, fqmmethodentry)
+		//method_entry(bt, fqmmethodentry)
+		method_entry()
 
 		CurrentContext = ctx
 		result, err := callHandler(ctx, msg, handler)
 		/*for _, listener := range listeners {
 			listener.HandlerFinished(ctx, err)
 		}*/
-		method_exit(bt, fqmmethodentry, 200)
-
-		end_business_transaction(bt)
+		//method_exit(bt, fqmmethodentry, 200)
+		method_exit()
+		//end_business_transaction(bt)
+		end_business_transaction()
 		coldStart = false
 		CurrentContext = nil
 		return result, err

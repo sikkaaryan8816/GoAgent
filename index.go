@@ -47,6 +47,7 @@ func WrapHandler(handler interface{}) interface{} {
 			listener.HandlerFinished(ctx, err)
 		}*/
 		//method_exit(bt, fqmmethodentry, 200)
+		fmt.Println("exit begin")
 		method_exit()
 		//end_business_transaction(bt)
 		end_business_transaction()

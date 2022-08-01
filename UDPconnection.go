@@ -290,7 +290,7 @@ func method_exit() {
 	len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), a, len, node.MethodExitVar.methodName)
 	len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), b, len, node.MethodExitVar.backend_header)
 	len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), c, len, node.MethodExitVar.requestNotificationPhase)
-
+	fmt.Println("conn value2",aiRecObj.conn)
 	_, err := aiRecObj.conn.Write(buf)
 	fmt.Println("send data_MExit")
 	if err != nil {

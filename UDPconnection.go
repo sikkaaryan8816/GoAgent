@@ -157,6 +157,7 @@ func NewAIRecord() *aiRecord {
 	if err != nil {
 		fmt.Printf("Some error %v", err)
 	}
+	fmt.Println("conn value",r.conn)
 	return &r
 }
 
@@ -250,7 +251,7 @@ func method_entry() {
 }
 
 func method_exit() {
-
+	fmt.Println("conn value1",aiRecObj.conn)
 	var buf = make([]byte, 1024)
 	len := Header(buf)
 	var node MethodExit_t

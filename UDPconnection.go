@@ -362,6 +362,7 @@ func StartTransactionMessage(bt_name string, correlationHeader string) {
 	fmt.Println("send data_start")
 	if err != nil {
 		log.Fatal(err)
+		fmt.Println("err not null")
 
 	}
 

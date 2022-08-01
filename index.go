@@ -40,7 +40,8 @@ func WrapHandler(handler interface{}) interface{} {
 
 		//method_entry(bt, fqmmethodentry)
 		method_entry()
-
+	        method_exit()
+		end_business_transaction()
 		CurrentContext = ctx
 		result, err := callHandler(ctx, msg, handler)
 		/*for _, listener := range listeners {
@@ -48,9 +49,9 @@ func WrapHandler(handler interface{}) interface{} {
 		}*/
 		//method_exit(bt, fqmmethodentry, 200)
 		fmt.Println("exit begin")
-		method_exit()
+		//method_exit()
 		//end_business_transaction(bt)
-		end_business_transaction()
+		//end_business_transaction()
 		coldStart = false
 		CurrentContext = nil
 		return result, err

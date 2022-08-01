@@ -293,6 +293,7 @@ func method_exit() {
 	_, err := aiRecObj.conn.Write(buf)
 	fmt.Println("send data_MExit")
 	if err != nil {
+		fmt.Println("err = nil")
 		log.Fatal(err)
 
 	}

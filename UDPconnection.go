@@ -187,7 +187,7 @@ func condition(a string) C.int {
 	fmt.Println("request=", string(request), a)
 
 }*/
-var buf = make([]byte, 1024)
+
 
 //func main() {
 func create_start_transaction_message(bt_name, nil string) {
@@ -251,7 +251,7 @@ func method_entry() {
 }
 
 func method_exit() {
-	fmt.Println("conn value1",aiRecObj.conn)
+	
 	var buf = make([]byte, 1024)
 	len := Header(buf)
 	var node MethodExit_t
@@ -294,6 +294,7 @@ func method_exit() {
 	_, err := aiRecObj.conn.Write(buf)
 	fmt.Println("send data_MExit")
 	if err != nil {
+		fmt.Println("conn value3",aiRecObj.conn)
 		fmt.Println("err = nil")
 		log.Fatal(err)
 

@@ -107,10 +107,10 @@ import (
 	//"strings"
 )
 
-func closeUDP() {
+/*func closeUDP() {
 	aiRecObj.conn.Close()
 	fmt.Println("close")
-}
+}*/
 
 func Header(buf []byte) C.int {
 
@@ -389,7 +389,7 @@ func end_business_transaction() {
 		log.Fatal(err)
 
 	}
-	closeUDP()
+	//closeUDP()
 }
 
 type transactionStartVar_t struct {

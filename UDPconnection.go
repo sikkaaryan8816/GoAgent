@@ -41,7 +41,8 @@ int main3(char *s,msgHdr_t *in,transactionStart_t *in1,int len)
     len += 1;
     memcpy(s + len, (char *)&(in1->transactionStartVar), sizeof(node.transactionStartVar));
     len += sizeof(node.transactionStartVar);
-   
+    memcpy(s + len, "\n", 1);
+    len += 1;
     return len;
 
 
@@ -59,7 +60,8 @@ int main4(char *s,msgHdr_t *in, MethodEntry_t *in1,int len)
     len += 1;
     memcpy(s + len, (char *)&(in1->MethodEntryVar), sizeof(node.MethodEntryVar));
     len += sizeof(node.MethodEntryVar);
-   
+    memcpy(s + len, "\n", 1);
+    len += 1;
     return len;
 }
 int main5(char *s,msgHdr_t *in, MethodExit_t *in1,int len)
@@ -75,7 +77,8 @@ int main5(char *s,msgHdr_t *in, MethodExit_t *in1,int len)
     len += 1;
     memcpy(s + len, (char *)&(in1->MethodExitVar), sizeof(node.MethodExitVar));
     len += sizeof(node.MethodExitVar);
-   
+    memcpy(s + len, "\n", 1);
+    len += 1;
     return len;
 
 }

@@ -13,12 +13,12 @@ package index
 int main1(char *s, wrapheader_t *in){
 
     int len = 0;
-    //wrapheader_t wrapHeader;
+    wrapheader_t wrapHeader;
     memcpy(s, "^",1);
     len += 1;
-    memcpy(s + len , (char *)&(in->wrapheadervar), sizeof(in->wrapheadervar));
-    fprintf(stderr, "asdsfd = %p\n",(char *)&(in->wrapheadervar));
-    len += sizeof(in->wrapheadervar);
+    memcpy(s + len , (char *)&(in->wrapheadervar), sizeof(wrapHeader.wrapheadervar));
+    fprintf(stderr, "asdsfd = %p\n",(char *)&(wrapHeader.wrapheadervar));
+    len += sizeof(wrapHeader.wrapheadervar);
 
   return len;
 }
@@ -31,12 +31,12 @@ int main2(char *s,char *value,int len,int number)
 int main3(char *s,msgHdr_t *in,transactionStart_t *in1,int len)
 {
     //transactionStart_t node;
-   // msgHdr_t msgHdr;
+    msgHdr_t msgHdr;
     memcpy(s+len, "^",1);
     len += 1;
-    memcpy(s + len , (char *)in, sizeof(in) );
+    memcpy(s + len , (char *)in, sizeof(msgHdr_t) );
 
-    len += sizeof(in);
+    len += sizeof(msgHdr_t);
     memcpy(s + len , "|",1);
     len += 1;
     memcpy(s + len, (char *)&(in1->transactionStartVar), sizeof(in1->transactionStartVar));
@@ -50,12 +50,12 @@ int main3(char *s,msgHdr_t *in,transactionStart_t *in1,int len)
 int main4(char *s,msgHdr_t *in, MethodEntry_t *in1,int len)
 {
     msgHdr_t msgHdr;
-    MethodEntry_t node;
+   // MethodEntry_t node;
     memcpy(s+len, "^",1);
     len += 1;
-    memcpy(s + len , (char *)in, sizeof(in) );
+    memcpy(s + len , (char *)in, sizeof(msgHdr_t) );
 
-    len += sizeof(in);
+    len += sizeof(msgHdr_t);
     memcpy(s + len , "|",1);
     len += 1;
     memcpy(s + len, (char *)&(in1->MethodEntryVar), sizeof(in1->MethodEntryVar));
@@ -67,10 +67,10 @@ int main4(char *s,msgHdr_t *in, MethodEntry_t *in1,int len)
 int main5(char *s,msgHdr_t *in, MethodExit_t *in1,int len)
 {
     msgHdr_t msgHdr;
-    MethodExit_t node;
+   // MethodExit_t node;
     memcpy(s+len, "^",1);
     len += 1;
-    memcpy(s + len , (char *)in, sizeof(in) );
+    memcpy(s + len , (char *)in, sizeof(msgHdr_t) );
 
     len += sizeof(msgHdr);
     memcpy(s + len , "|",1);
@@ -85,12 +85,12 @@ int main5(char *s,msgHdr_t *in, MethodExit_t *in1,int len)
 int main6(char *s,msgHdr_t *in, transactionEnd_t *in1,int len)
 {
     msgHdr_t msgHdr;
-    transactionEnd_t node;
+  //  transactionEnd_t node;
     memcpy(s+len, "^",1);
     len += 1;
-    memcpy(s + len , (char *)in, sizeof(in) );
+    memcpy(s + len , (char *)in, sizeof(msgHdr_t) );
 
-    len += sizeof(in);
+    len += sizeof(msgHdr_t);
     memcpy(s + len , "|",1);
     len += 1;
     memcpy(s + len, (char *)in1, sizeof(in1));

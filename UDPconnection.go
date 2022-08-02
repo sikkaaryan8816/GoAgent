@@ -17,7 +17,7 @@ int main1(char *s, wrapheader_t *in){
     memcpy(s, "^",1);
     len += 1;
     memcpy(s + len , (char *)&(in->wrapheadervar), sizeof(in->wrapheadervar));
-    fprintf(stderr, "asdsfd = %p\n",(char *)&(wrapHeader.wrapheadervar));
+    fprintf(stderr, "asdsfd = %p\n",(char *)&(in->wrapheadervar));
     len += sizeof(in->wrapheadervar);
 
   return len;

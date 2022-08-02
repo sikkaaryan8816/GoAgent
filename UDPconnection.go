@@ -13,12 +13,12 @@ package index
 int main1(char *s, wrapheader_t *in){
 
     int len = 0;
-    wrapheader_t wrapHeader;
+    //wrapheader_t wrapHeader;
     memcpy(s, "^",1);
     len += 1;
-    memcpy(s + len , (char *)&(in->wrapheadervar), sizeof(wrapHeader.wrapheadervar));
+    memcpy(s + len , (char *)&(in->wrapheadervar), sizeof(in->wrapheadervar));
     fprintf(stderr, "asdsfd = %p\n",(char *)&(in->wrapheadervar));
-    len += sizeof(wrapHeader.wrapheadervar);
+    len += sizeof(in->wrapheadervar);
 
   return len;
 }
@@ -30,17 +30,17 @@ int main2(char *s,char *value,int len,int number)
 }
 int main3(char *s,msgHdr_t *in,transactionStart_t *in1,int len)
 {
-    transactionStart_t node;
-    msgHdr_t msgHdr;
+    //transactionStart_t node;
+   // msgHdr_t msgHdr;
     memcpy(s+len, "^",1);
     len += 1;
-    memcpy(s + len , (char *)in, sizeof(msgHdr) );
+    memcpy(s + len , (char *)in, sizeof(in) );
 
-    len += sizeof(msgHdr);
+    len += sizeof(in);
     memcpy(s + len , "|",1);
     len += 1;
-    memcpy(s + len, (char *)&(in1->transactionStartVar), sizeof(node.transactionStartVar));
-    len += sizeof(node.transactionStartVar);
+    memcpy(s + len, (char *)&(in1->transactionStartVar), sizeof(in1->transactionStartVar));
+    len += sizeof(in1->transactionStartVar);
     memcpy(s + len, "\n", 1);
     len += 1;
     return len;
@@ -53,13 +53,13 @@ int main4(char *s,msgHdr_t *in, MethodEntry_t *in1,int len)
     MethodEntry_t node;
     memcpy(s+len, "^",1);
     len += 1;
-    memcpy(s + len , (char *)in, sizeof(msgHdr) );
+    memcpy(s + len , (char *)in, sizeof(in) );
 
-    len += sizeof(msgHdr);
+    len += sizeof(in);
     memcpy(s + len , "|",1);
     len += 1;
-    memcpy(s + len, (char *)&(in1->MethodEntryVar), sizeof(node.MethodEntryVar));
-    len += sizeof(node.MethodEntryVar);
+    memcpy(s + len, (char *)&(in1->MethodEntryVar), sizeof(in1->MethodEntryVar));
+    len += sizeof(in1->MethodEntryVar);
     memcpy(s + len, "\n", 1);
     len += 1;
     return len;
@@ -70,13 +70,13 @@ int main5(char *s,msgHdr_t *in, MethodExit_t *in1,int len)
     MethodExit_t node;
     memcpy(s+len, "^",1);
     len += 1;
-    memcpy(s + len , (char *)in, sizeof(msgHdr) );
+    memcpy(s + len , (char *)in, sizeof(in) );
 
     len += sizeof(msgHdr);
     memcpy(s + len , "|",1);
     len += 1;
-    memcpy(s + len, (char *)&(in1->MethodExitVar), sizeof(node.MethodExitVar));
-    len += sizeof(node.MethodExitVar);
+    memcpy(s + len, (char *)&(in1->MethodExitVar), sizeof(in1->MethodExitVar));
+    len += sizeof(in1->MethodExitVar);
     memcpy(s + len, "\n", 1);
     len += 1;
     return len;
@@ -88,13 +88,13 @@ int main6(char *s,msgHdr_t *in, transactionEnd_t *in1,int len)
     transactionEnd_t node;
     memcpy(s+len, "^",1);
     len += 1;
-    memcpy(s + len , (char *)in, sizeof(msgHdr) );
+    memcpy(s + len , (char *)in, sizeof(in) );
 
-    len += sizeof(msgHdr);
+    len += sizeof(in);
     memcpy(s + len , "|",1);
     len += 1;
-    memcpy(s + len, (char *)in1, sizeof(node));
-    len += sizeof(node);
+    memcpy(s + len, (char *)in1, sizeof(in1));
+    len += sizeof(in1);
     memcpy(s + len, "\n", 1);
     len += 1;
 }

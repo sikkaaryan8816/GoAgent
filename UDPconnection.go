@@ -96,6 +96,7 @@ int main6(char *s,msgHdr_t *in, transactionEnd_t *in1,int len)
     memcpy(s + len, (char *)in1, sizeof(node));
     len += sizeof(node);
     memcpy(s + len, "\n", 1);
+    len += 1;
 }
 */
 import "C"
@@ -327,7 +328,7 @@ func StartTransactionMessage(bt_name string, correlationHeader string) {
 	correlationHeader = "dummy_correlationHeader"
 
 	var transaction transactionStart_t
-
+	
 	transaction.transactionStartVar.fp_header = (condition(fp_header))
 	transaction.transactionStartVar.url = (condition(url))
 	transaction.transactionStartVar.btHeaderValue = (condition(btHeaderValue))
@@ -338,7 +339,7 @@ func StartTransactionMessage(bt_name string, correlationHeader string) {
 	transaction.transactionStartVar.startTimeFP = 0
 	transaction.transactionStartVar.qTimeMS = 0
 	var msgHdr msgHdr_t
-
+	fmt.Println("size of transaction.transactionStartVar-",unsafe.Sizeof(transaction.transactionStartVar))
 	msgHdr.header_len = C.int(unsafe.Sizeof(msgHdr))
 	msgHdr.total_len = C.int(unsafe.Sizeof(transaction.transactionStartVar)) + msgHdr.header_len + transaction.transactionStartVar.fp_header + transaction.transactionStartVar.url + transaction.transactionStartVar.btHeaderValue + transaction.transactionStartVar.ndCookieSet + transaction.transactionStartVar.nvCookieSet + transaction.transactionStartVar.correlationHeader + 3
 	msgHdr.msg_type = 2

@@ -13,12 +13,12 @@ package index
 int main1(char *s, wrapheader_t *in){
 
     int len = 0;
-    wrapheader_t wrapHeader;
+    //wrapheader_t wrapHeader;
     memcpy(s, "^",1);
     len += 1;
-    memcpy(s + len , (char *)&(in->wrapheadervar), sizeof(wrapHeader.wrapheadervar));
+    memcpy(s + len , (char *)&(in->wrapheadervar), sizeof(in->wrapheadervar));
     fprintf(stderr, "asdsfd = %p\n",(char *)&(wrapHeader.wrapheadervar));
-    len += sizeof(wrapHeader.wrapheadervar);
+    len += sizeof(in->wrapheadervar);
 
   return len;
 }

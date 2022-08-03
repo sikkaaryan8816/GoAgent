@@ -46,7 +46,7 @@ int main3(char *s,msgHdr_t *in,transactionStart_t *in1,int len)
     memcpy(s + len, (char *)&(in1->transactionStartVar), sizeof(in1->transactionStartVar));
     len += sizeof(in1->transactionStartVar);
     fprintf("len ST=%d\n",len);
-    fprintf("len MH=%d\n",sizeof(in1->transactionStartVar);
+    fprintf("len MH=%d\n",sizeof(in1->transactionStartVar));
     memcpy(s + len, "\n", 1);
     len += 1;
     return len;

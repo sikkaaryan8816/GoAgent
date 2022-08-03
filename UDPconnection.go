@@ -350,19 +350,19 @@ func StartTransactionMessage(bt_name string, correlationHeader string) {
 	wrapHeader.wrapheadervar.whLen = C.int(unsafe.Sizeof(wrapHeader.wrapheadervar)) + wrapHeader.wrapheadervar.apiReqLen + wrapHeader.wrapheadervar.awsReqLen + wrapHeader.wrapheadervar.funcNameLen + wrapHeader.wrapheadervar.tagslength + 1
 
 	len := C.main1((*C.char)(unsafe.Pointer(&buf[0])), (*C.wrapheader_t)(unsafe.Pointer(&wrapHeader)))
-	a := C.CString(apiReqId)
-	b := C.CString(awsReqId)
-	c := C.CString(funcName)
-	d := C.CString(tags)
-	defer C.free(unsafe.Pointer(a))
-	defer C.free(unsafe.Pointer(b))
-	defer C.free(unsafe.Pointer(c))
-	defer C.free(unsafe.Pointer(d))
+	u := C.CString(apiReqId)
+	v := C.CString(awsReqId)
+	x := C.CString(funcName)
+	y := C.CString(tags)
+	defer C.free(unsafe.Pointer(u))
+	defer C.free(unsafe.Pointer(v))
+	defer C.free(unsafe.Pointer(x))
+	defer C.free(unsafe.Pointer(y))
 
-	len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), a, len, wrapHeader.wrapheadervar.apiReqLen)
-	len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), b, len, wrapHeader.wrapheadervar.awsReqLen)
-	len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), c, len, wrapHeader.wrapheadervar.funcNameLen)
-	len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), d, len, wrapHeader.wrapheadervar.tagslength)
+	len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), u, len, wrapHeader.wrapheadervar.apiReqLen)
+	len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), v, len, wrapHeader.wrapheadervar.awsReqLen)
+	len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), x, len, wrapHeader.wrapheadervar.funcNameLen)
+	len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), y, len, wrapHeader.wrapheadervar.tagslength)
 	
 	
 	fp_header := "dummy_fp_header"

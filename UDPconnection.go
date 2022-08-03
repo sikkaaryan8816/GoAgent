@@ -13,13 +13,13 @@ package index
 int main1(char *s, wrapheader_t *in){
 
     int len = 0;
-    //wrapheader_t wrapHeader;
+    wrapheader_t wrapHeader;
     memcpy(s, "^",1);
     len += 1;
-    memcpy(s + len , (char *)&(in->wrapheadervar), sizeof(in->wrapheadervar));
-    len += sizeof(in->wrapheadervar);
+    memcpy(s + len , (char *)&(in->wrapheadervar), sizeof(wrapHeader.wrapheadervar));
+    len += sizeof(wrapHeader.wrapheadervar);
     fprintf(stderr,"len WH=%d\n",len);
-    fprintf(stderr,"len WH=%ld\n",sizeof(in->wrapheadervar));
+    fprintf(stderr,"len WH=%ld\n",sizeof(wrapHeader.wrapheadervar));
 
   return len;
 }
@@ -31,7 +31,7 @@ int main2(char *s,char *value,int len,int number)
 }
 int main3(char *s,msgHdr_t *in,transactionStart_t *in1,int len)
 {
-    //transactionStart_t node;
+    transactionStart_t node;
     msgHdr_t msgHdr;
     memcpy(s+len, "^",1);
     len += 1;
@@ -43,10 +43,10 @@ int main3(char *s,msgHdr_t *in,transactionStart_t *in1,int len)
     fprintf(stderr,"len MH=%d\n",len);
     memcpy(s + len , "|",1);
     len += 1;
-    memcpy(s + len, (char *)&(in1->transactionStartVar), sizeof(in1->transactionStartVar));
-    len += sizeof(in1->transactionStartVar);
+    memcpy(s + len, (char *)&(in1->transactionStartVar), sizeof(node.transactionStartVar));
+    len += sizeof(node.transactionStartVar);
     fprintf(stderr,"len ST=%d\n",len);
-    fprintf(stderr,"len MH=%ld\n",sizeof(in1->transactionStartVar));
+    fprintf(stderr,"len MH=%ld\n",sizeof(node.transactionStartVar));
     memcpy(s + len, "\n", 1);
     len += 1;
     return len;
@@ -56,7 +56,7 @@ int main3(char *s,msgHdr_t *in,transactionStart_t *in1,int len)
 int main4(char *s,msgHdr_t *in, MethodEntry_t *in1,int len)
 {
     msgHdr_t msgHdr;
-   // MethodEntry_t node;
+    MethodEntry_t node;
     memcpy(s+len, "^",1);
     len += 1;
     memcpy(s + len , (char *)in, sizeof(msgHdr_t) );
@@ -66,9 +66,10 @@ int main4(char *s,msgHdr_t *in, MethodEntry_t *in1,int len)
     len += sizeof(msgHdr_t);
     memcpy(s + len , "|",1);
     len += 1;
-    memcpy(s + len, (char *)&(in1->MethodEntryVar), sizeof(in1->MethodEntryVar));
-    len += sizeof(in1->MethodEntryVar);
+    memcpy(s + len, (char *)&(in1->MethodEntryVar), sizeof(node.MethodEntryVar));
+    len += sizeof(node.MethodEntryVar);
     fprintf(stderr,"len MEY=%d\n",len);
+    fprintf(stderr,"len MH=%ld\n",sizeof(node.MethodEntryVar));
     memcpy(s + len, "\n", 1);
     len += 1;
     return len;
@@ -76,7 +77,7 @@ int main4(char *s,msgHdr_t *in, MethodEntry_t *in1,int len)
 int main5(char *s,msgHdr_t *in, MethodExit_t *in1,int len)
 {
     msgHdr_t msgHdr;
-   // MethodExit_t node;
+    MethodExit_t node;
     memcpy(s+len, "^",1);
     len += 1;
     memcpy(s + len , (char *)in, sizeof(msgHdr_t) );
@@ -86,9 +87,10 @@ int main5(char *s,msgHdr_t *in, MethodExit_t *in1,int len)
     len += sizeof(msgHdr);
     memcpy(s + len , "|",1);
     len += 1;
-    memcpy(s + len, (char *)&(in1->MethodExitVar), sizeof(in1->MethodExitVar));
-    len += sizeof(in1->MethodExitVar);
+    memcpy(s + len, (char *)&(in1->MethodExitVar), sizeof(node.MethodExitVar));
+    len += sizeof(node.MethodExitVar);
     fprintf(stderr,"len MET=%d\n",len);
+    fprintf(stderr,"len MH=%ld\n",sizeof(node.MethodExitVar));
     memcpy(s + len, "\n", 1);
     len += 1;
     return len;
@@ -97,7 +99,7 @@ int main5(char *s,msgHdr_t *in, MethodExit_t *in1,int len)
 int main6(char *s,msgHdr_t *in, transactionEnd_t *in1,int len)
 {
     msgHdr_t msgHdr;
-  //  transactionEnd_t node;
+    transactionEnd_t node;
     memcpy(s+len, "^",1);
     len += 1;
     memcpy(s + len , (char *)in, sizeof(msgHdr_t) );
@@ -107,9 +109,10 @@ int main6(char *s,msgHdr_t *in, transactionEnd_t *in1,int len)
     len += sizeof(msgHdr_t);
     memcpy(s + len , "|",1);
     len += 1;
-    memcpy(s + len, (char *)in1, sizeof(in1));
-    len += sizeof(in1);
+    memcpy(s + len, (char *)in1, sizeof(node));
+    len += sizeof(node);
     fprintf(stderr,"len ET=%d\n",len);
+    fprintf(stderr,"len MH=%ld\n",sizeof(node));
     memcpy(s + len, "\n", 1);
     len += 1;
 }
@@ -335,6 +338,7 @@ func StartTransactionMessage(bt_name string, correlationHeader string) {
 
 	var buf = make([]byte, 1024)
 	len := Header(buf)
+	fmt.Println(len)
 	fp_header := "dummy_fp_header"
 	url := bt_name
 	btHeaderValue := "dummy_btHeaderValue"

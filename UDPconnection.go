@@ -132,10 +132,10 @@ import (
 	//"strings"
 )
 
-/*func closeUDP() {
+func closeUDP() {
 	aiRecObj.conn.Close()
 	fmt.Println("close")
-}*/
+}
 
 func Header(buf []byte) C.int {
 

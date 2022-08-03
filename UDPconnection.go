@@ -142,7 +142,8 @@ func Header(buf []byte) C.int {
 	var apiReqId = "akkdnfjnflffk"
 	var awsReqId = "lksjskwjdkdldl"
 	var funcName = "lamdafunion_test1"
-	//var  agentType=0
+	var agentType= 0
+	var messageType = 0
 	var tags = "tierName=tier_test1;ndAppServerHost=server_test1;appName=Abhimanyulambda_test1"
 	var wrapHeader wrapheader_t
 	wrapHeader.wrapheadervar.apiReqLen = (condition(apiReqId))
@@ -150,7 +151,8 @@ func Header(buf []byte) C.int {
 	wrapHeader.wrapheadervar.funcNameLen = (condition(funcName))
 	wrapHeader.wrapheadervar.tagslength = (condition(tags))
 	wrapHeader.wrapheadervar.whLen = C.int(unsafe.Sizeof(wrapHeader.wrapheadervar)) + wrapHeader.wrapheadervar.apiReqLen + wrapHeader.wrapheadervar.awsReqLen + wrapHeader.wrapheadervar.funcNameLen + wrapHeader.wrapheadervar.tagslength + 1
-
+	wrapHeader.wrapheadervar.agentType = 0
+	wrapHeader.wrapheadervar.messageType = 0
 	len := C.main1((*C.char)(unsafe.Pointer(&buf[0])), (*C.wrapheader_t)(unsafe.Pointer(&wrapHeader)))
 	a := C.CString(apiReqId)
 	b := C.CString(awsReqId)

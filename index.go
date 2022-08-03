@@ -28,8 +28,8 @@ func WrapHandler(handler interface{}) interface{} {
 		}*/
 
 		//aws_request_id := "default_aws_request_id"
-		function_name := "http://10.20.0.85:81/PDO/pdo_test1.php"
-		url_path := function_name
+		//function_name := "http://10.20.0.85:81/PDO/pdo_test1.php"
+		//url_path := function_name
 
 		//create_start_transaction_message(url_path, "")
 		//fmt.Println(bt)

@@ -424,7 +424,7 @@ func StartTransactionMessage(bt_name string, correlationHeader string) {
 }
 
 func end_business_transaction() {
-
+	UDPConnection()
 	var buf = make([]byte, 1024)
 	len := Header(buf)
 
@@ -446,7 +446,7 @@ func end_business_transaction() {
 		log.Fatal(err)
 
 	}
-	//closeUDP()
+	closeUDP()
 }
 
 type transactionStartVar_t struct {

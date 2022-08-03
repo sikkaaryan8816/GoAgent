@@ -337,8 +337,34 @@ func method_exit() {
 func StartTransactionMessage(bt_name string, correlationHeader string) {
 
 	var buf = make([]byte, 1024)
-	len := Header(buf)
-	fmt.Println(len)
+	var apiReqId = "akkdnfjnflffk"
+	var awsReqId = "lksjskwjdkdldl"
+	var funcName = "lamdafunion_test1"
+	//var  agentType=0
+	var tags = "tierName=tier_test1;ndAppServerHost=server_test1;appName=Abhimanyulambda_test1"
+	var wrapHeader wrapheader_t
+	wrapHeader.wrapheadervar.apiReqLen = (condition(apiReqId))
+	wrapHeader.wrapheadervar.awsReqLen = (condition(awsReqId))
+	wrapHeader.wrapheadervar.funcNameLen = (condition(funcName))
+	wrapHeader.wrapheadervar.tagslength = (condition(tags))
+	wrapHeader.wrapheadervar.whLen = C.int(unsafe.Sizeof(wrapHeader.wrapheadervar)) + wrapHeader.wrapheadervar.apiReqLen + wrapHeader.wrapheadervar.awsReqLen + wrapHeader.wrapheadervar.funcNameLen + wrapHeader.wrapheadervar.tagslength + 1
+
+	len := C.main1((*C.char)(unsafe.Pointer(&buf[0])), (*C.wrapheader_t)(unsafe.Pointer(&wrapHeader)))
+	a := C.CString(apiReqId)
+	b := C.CString(awsReqId)
+	c := C.CString(funcName)
+	d := C.CString(tags)
+	defer C.free(unsafe.Pointer(a))
+	defer C.free(unsafe.Pointer(b))
+	defer C.free(unsafe.Pointer(c))
+	defer C.free(unsafe.Pointer(d))
+
+	len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), a, len, wrapHeader.wrapheadervar.apiReqLen)
+	len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), b, len, wrapHeader.wrapheadervar.awsReqLen)
+	len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), c, len, wrapHeader.wrapheadervar.funcNameLen)
+	len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), d, len, wrapHeader.wrapheadervar.tagslength)
+	
+	
 	fp_header := "dummy_fp_header"
 	url := bt_name
 	btHeaderValue := "dummy_btHeaderValue"

@@ -18,8 +18,8 @@ int main1(char *s, wrapheader_t *in){
     len += 1;
     memcpy(s + len , (char *)&(in->wrapheadervar), sizeof(in->wrapheadervar));
     len += sizeof(in->wrapheadervar);
-    fprintf("len WH=%d\n",len);
-    fprintf("len WH=%d\n",sizeof(in->wrapheadervar));
+    fprintf(stderr,"len WH=%d\n",len);
+    fprintf(stderr,"len WH=%d\n",sizeof(in->wrapheadervar));
 
   return len;
 }
@@ -40,13 +40,13 @@ int main3(char *s,msgHdr_t *in,transactionStart_t *in1,int len)
     fprintf(stderr,"in->total_len=%d\n",in->total_len);
     fprintf(stderr,"in->msg_type=%d\n",in->msg_type);
     len += sizeof(msgHdr_t);
-    fprintf("len MH=%d\n",len);
+    fprintf(stderr,"len MH=%d\n",len);
     memcpy(s + len , "|",1);
     len += 1;
     memcpy(s + len, (char *)&(in1->transactionStartVar), sizeof(in1->transactionStartVar));
     len += sizeof(in1->transactionStartVar);
-    fprintf("len ST=%d\n",len);
-    fprintf("len MH=%d\n",sizeof(in1->transactionStartVar));
+    fprintf(stderr,"len ST=%d\n",len);
+    fprintf(stderr,"len MH=%d\n",sizeof(in1->transactionStartVar));
     memcpy(s + len, "\n", 1);
     len += 1;
     return len;
@@ -68,7 +68,7 @@ int main4(char *s,msgHdr_t *in, MethodEntry_t *in1,int len)
     len += 1;
     memcpy(s + len, (char *)&(in1->MethodEntryVar), sizeof(in1->MethodEntryVar));
     len += sizeof(in1->MethodEntryVar);
-    fprintf("len MEY=%d\n",len);
+    fprintf(stderr,"len MEY=%d\n",len);
     memcpy(s + len, "\n", 1);
     len += 1;
     return len;
@@ -88,7 +88,7 @@ int main5(char *s,msgHdr_t *in, MethodExit_t *in1,int len)
     len += 1;
     memcpy(s + len, (char *)&(in1->MethodExitVar), sizeof(in1->MethodExitVar));
     len += sizeof(in1->MethodExitVar);
-    fprintf("len MET=%d\n",len);
+    fprintf(stderr,"len MET=%d\n",len);
     memcpy(s + len, "\n", 1);
     len += 1;
     return len;
@@ -109,7 +109,7 @@ int main6(char *s,msgHdr_t *in, transactionEnd_t *in1,int len)
     len += 1;
     memcpy(s + len, (char *)in1, sizeof(in1));
     len += sizeof(in1);
-    fprintf("len ET=%d\n",len);
+    fprintf(stderr,"len ET=%d\n",len);
     memcpy(s + len, "\n", 1);
     len += 1;
 }

@@ -31,7 +31,7 @@ func WrapHandler(handler interface{}) interface{} {
 		function_name := "http://10.20.0.85:81/PDO/pdo_test1.php"
 		url_path := function_name
 
-		create_start_transaction_message(url_path, "")
+		//create_start_transaction_message(url_path, "")
 		//fmt.Println(bt)
 
 		//handle, handler_name, mpackage := "test", "Test", "TEST"
@@ -39,8 +39,8 @@ func WrapHandler(handler interface{}) interface{} {
 		//fqmmethodentry := "handle.main.Test"
 
 		//method_entry(bt, fqmmethodentry)
-		method_entry()
-	        method_exit()
+		//method_entry()
+	       // method_exit()
 		end_business_transaction()
 		CurrentContext = ctx
 		result, err := callHandler(ctx, msg, handler)

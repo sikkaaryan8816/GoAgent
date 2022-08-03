@@ -19,7 +19,7 @@ int main1(char *s, wrapheader_t *in){
     memcpy(s + len , (char *)&(in->wrapheadervar), sizeof(in->wrapheadervar));
     len += sizeof(in->wrapheadervar);
     fprintf(stderr,"len WH=%d\n",len);
-    fprintf(stderr,"len WH=%d\n",sizeof(in->wrapheadervar));
+    fprintf(stderr,"len WH=%ld\n",sizeof(in->wrapheadervar));
 
   return len;
 }
@@ -46,7 +46,7 @@ int main3(char *s,msgHdr_t *in,transactionStart_t *in1,int len)
     memcpy(s + len, (char *)&(in1->transactionStartVar), sizeof(in1->transactionStartVar));
     len += sizeof(in1->transactionStartVar);
     fprintf(stderr,"len ST=%d\n",len);
-    fprintf(stderr,"len MH=%d\n",sizeof(in1->transactionStartVar));
+    fprintf(stderr,"len MH=%ld\n",sizeof(in1->transactionStartVar));
     memcpy(s + len, "\n", 1);
     len += 1;
     return len;

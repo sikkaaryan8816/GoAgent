@@ -130,6 +130,101 @@ import (
 	//"math/big"
 	//"strings"
 )
+type transactionStartVar_t struct {
+	fp_header         C.int
+	url               C.int
+	btHeaderValue     C.int
+	ndCookieSet       C.int
+	nvCookieSet       C.int
+	correlationHeader C.int
+	flowpathinstance  C.longlong
+	qTimeMS           C.long
+	startTimeFP       C.longlong
+}
+
+type transactionStart_t struct {
+	transactionStartVar transactionStartVar_t
+
+	fp_header         *C.char
+	url               *C.char
+	btHeaderValue     *C.char
+	ndCookieSet       *C.char
+	nvCookieSet       *C.char
+	correlationHeader *C.char
+}
+
+type msgHdr_t struct {
+	header_len C.int
+	total_len  C.int
+	msg_type   C.int
+}
+
+type MethodEntryVar_t struct {
+	mid C.int
+
+	flowpathinstance C.longlong
+	threadId         C.long
+	startTime        C.longlong
+
+	methodName   C.int
+	query_string C.int
+	urlParameter C.int
+}
+
+type MethodEntry_t struct {
+	MethodEntryVar MethodEntryVar_t
+
+	methodName   *C.char
+	query_string *C.char
+	urlParameter *C.char
+}
+type MethodExitVar_t struct {
+	statusCode       C.int
+	mid              C.int
+	eventType        C.int
+	isCallout        C.int
+	threadId         C.long
+	duration         C.long
+	flowpathinstance C.longlong
+	cpuTime          C.longlong
+
+	methodName               C.int
+	backend_header           C.int
+	requestNotificationPhase C.int
+	tierCallOutSeqNum        C.longlong
+	endTime                  C.longlong
+}
+
+type MethodExit_t struct {
+	MethodExitVar MethodExitVar_t
+
+	methodName               *C.char
+	backend_header           *C.char
+	requestNotificationPhase *C.char
+}
+type transactionEnd_t struct {
+	statuscode       C.int
+	flowpathinstance C.longlong
+	endTime          C.longlong
+	cpuTime          C.longlong
+}
+type wrapheadervar_t struct {
+	whLen       C.int
+	apiReqLen   C.int
+	awsReqLen   C.int
+	funcNameLen C.int
+	tagslength  C.int
+	agentType   C.short
+	messageType C.short
+}
+
+type wrapheader_t struct {
+	wrapheadervar wrapheadervar_t
+	apiReqId      *C.char
+	awsReqId      *C.char
+	funcName      *C.char
+	tags          *C.char //; separated key=value pairs
+}
 
 func closeUDP() {
 	aiRecObj.conn.Close()
@@ -145,13 +240,14 @@ func Header(buf []byte) C.int {
 	//var messageType = 0
 	var tags = "tierName=tier_test1;ndAppServerHost=server_test1;appName=lamdafunion_test1"
 	var wrapHeader wrapheader_t
+	va
 	wrapHeader.wrapheadervar.apiReqLen = (condition(apiReqId))
 	wrapHeader.wrapheadervar.awsReqLen = (condition(awsReqId))
 	wrapHeader.wrapheadervar.funcNameLen = (condition(funcName))
 	wrapHeader.wrapheadervar.tagslength = (condition(tags))
 	wrapHeader.wrapheadervar.agentType = 0
 	wrapHeader.wrapheadervar.messageType = 0
-	wrapHeader.wrapheadervar.whLen = C.int(unsafe.Sizeof(*C.wrapheadervar_t)) + wrapHeader.wrapheadervar.apiReqLen + wrapHeader.wrapheadervar.awsReqLen + wrapHeader.wrapheadervar.funcNameLen + wrapHeader.wrapheadervar.tagslength + 1
+	wrapHeader.wrapheadervar.whLen = C.int(unsafe.Sizeof(wrapheadervar_t)) + wrapHeader.wrapheadervar.apiReqLen + wrapHeader.wrapheadervar.awsReqLen + wrapHeader.wrapheadervar.funcNameLen + wrapHeader.wrapheadervar.tagslength + 1
 	len := C.main1((*C.char)(unsafe.Pointer(&buf[0])), (*C.wrapheader_t)(unsafe.Pointer(&wrapHeader)))
 	a := C.CString(apiReqId)
 	b := C.CString(awsReqId)
@@ -251,7 +347,7 @@ func method_entry() {
 	node.MethodEntryVar.startTime = 0
 
 	msgHdr.header_len = C.int(unsafe.Sizeof(msgHdr))
-	msgHdr.total_len = C.int(unsafe.Sizeof(*C.MethodEntryVar_t)) + msgHdr.header_len + node.MethodEntryVar.methodName + node.MethodEntryVar.query_string + node.MethodEntryVar.urlParameter + 3
+	msgHdr.total_len = C.int(unsafe.Sizeof(MethodEntryVar_t)) + msgHdr.header_len + node.MethodEntryVar.methodName + node.MethodEntryVar.query_string + node.MethodEntryVar.urlParameter + 3
 	msgHdr.msg_type = 0
 	len = C.main4((*C.char)(unsafe.Pointer(&buf[0])), (*C.msgHdr_t)(unsafe.Pointer(&msgHdr)), (*C.MethodEntry_t)(unsafe.Pointer(&node)), len)
 
@@ -301,7 +397,7 @@ func method_exit() {
 	node.MethodExitVar.requestNotificationPhase = condition(requestNotificationPhase)
 
 	msgHdr.header_len = C.int(unsafe.Sizeof(msgHdr))
-	msgHdr.total_len = C.int(unsafe.Sizeof(*C.MethodExitVar_t)) + msgHdr.header_len + node.MethodExitVar.methodName + node.MethodExitVar.backend_header + node.MethodExitVar.requestNotificationPhase + 3
+	msgHdr.total_len = C.int(unsafe.Sizeof(MethodExitVar_t)) + msgHdr.header_len + node.MethodExitVar.methodName + node.MethodExitVar.backend_header + node.MethodExitVar.requestNotificationPhase + 3
 	msgHdr.msg_type = 1
 
 	len = C.main5((*C.char)(unsafe.Pointer(&buf[0])), (*C.msgHdr_t)(unsafe.Pointer(&msgHdr)), (*C.MethodExit_t)(unsafe.Pointer(&node)), len)
@@ -360,7 +456,7 @@ func StartTransactionMessage(bt_name string, correlationHeader string) {
 	var msgHdr msgHdr_t
 	fmt.Println("size of transaction.transactionStartVar-",unsafe.Sizeof(transaction.transactionStartVar))
 	msgHdr.header_len = C.int(unsafe.Sizeof(msgHdr))
-	msgHdr.total_len = C.int(unsafe.Sizeof(*C.transactionStartVar_t)) + msgHdr.header_len + transaction.transactionStartVar.fp_header + transaction.transactionStartVar.url + transaction.transactionStartVar.btHeaderValue + transaction.transactionStartVar.ndCookieSet + transaction.transactionStartVar.nvCookieSet + transaction.transactionStartVar.correlationHeader + 3
+	msgHdr.total_len = C.int(unsafe.Sizeof(transactionStartVar_t)) + msgHdr.header_len + transaction.transactionStartVar.fp_header + transaction.transactionStartVar.url + transaction.transactionStartVar.btHeaderValue + transaction.transactionStartVar.ndCookieSet + transaction.transactionStartVar.nvCookieSet + transaction.transactionStartVar.correlationHeader + 3
 	msgHdr.msg_type = 2
 
 	len = C.main3((*C.char)(unsafe.Pointer(&buf[0])), (*C.msgHdr_t)(unsafe.Pointer(&msgHdr)), (*C.transactionStart_t)(unsafe.Pointer(&transaction)), len)
@@ -405,7 +501,7 @@ func end_business_transaction() {
 	var transactionEnd transactionEnd_t
 	var msgHdr msgHdr_t
 	msgHdr.header_len = C.int(unsafe.Sizeof(msgHdr))
-	msgHdr.total_len = C.int(unsafe.Sizeof(*C.transactionEnd_t)) + msgHdr.header_len + 3
+	msgHdr.total_len = C.int(unsafe.Sizeof(transactionEnd_t)) + msgHdr.header_len + 3
 	msgHdr.msg_type = 3
 
 	transactionEnd.statuscode = 200
@@ -423,98 +519,4 @@ func end_business_transaction() {
 	closeUDP()
 }
 
-type transactionStartVar_t struct {
-	fp_header         C.int
-	url               C.int
-	btHeaderValue     C.int
-	ndCookieSet       C.int
-	nvCookieSet       C.int
-	correlationHeader C.int
-	flowpathinstance  C.longlong
-	qTimeMS           C.long
-	startTimeFP       C.longlong
-}
 
-type transactionStart_t struct {
-	transactionStartVar transactionStartVar_t
-
-	fp_header         *C.char
-	url               *C.char
-	btHeaderValue     *C.char
-	ndCookieSet       *C.char
-	nvCookieSet       *C.char
-	correlationHeader *C.char
-}
-
-type msgHdr_t struct {
-	header_len C.int
-	total_len  C.int
-	msg_type   C.int
-}
-
-type MethodEntryVar_t struct {
-	mid C.int
-
-	flowpathinstance C.longlong
-	threadId         C.long
-	startTime        C.longlong
-
-	methodName   C.int
-	query_string C.int
-	urlParameter C.int
-}
-
-type MethodEntry_t struct {
-	MethodEntryVar MethodEntryVar_t
-
-	methodName   *C.char
-	query_string *C.char
-	urlParameter *C.char
-}
-type MethodExitVar_t struct {
-	statusCode       C.int
-	mid              C.int
-	eventType        C.int
-	isCallout        C.int
-	threadId         C.long
-	duration         C.long
-	flowpathinstance C.longlong
-	cpuTime          C.longlong
-
-	methodName               C.int
-	backend_header           C.int
-	requestNotificationPhase C.int
-	tierCallOutSeqNum        C.longlong
-	endTime                  C.longlong
-}
-
-type MethodExit_t struct {
-	MethodExitVar MethodExitVar_t
-
-	methodName               *C.char
-	backend_header           *C.char
-	requestNotificationPhase *C.char
-}
-type transactionEnd_t struct {
-	statuscode       C.int
-	flowpathinstance C.longlong
-	endTime          C.longlong
-	cpuTime          C.longlong
-}
-type wrapheadervar_t struct {
-	whLen       C.int
-	apiReqLen   C.int
-	awsReqLen   C.int
-	funcNameLen C.int
-	tagslength  C.int
-	agentType   C.short
-	messageType C.short
-}
-
-type wrapheader_t struct {
-	wrapheadervar wrapheadervar_t
-	apiReqId      *C.char
-	awsReqId      *C.char
-	funcName      *C.char
-	tags          *C.char //; separated key=value pairs
-}

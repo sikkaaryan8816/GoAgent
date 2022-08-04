@@ -240,7 +240,6 @@ func Header(buf []byte) C.int {
 	//var messageType = 0
 	var tags = "tierName=tier_test1;ndAppServerHost=server_test1;appName=lamdafunion_test1"
 	var wrapHeader wrapheader_t
-	va
 	wrapHeader.wrapheadervar.apiReqLen = (condition(apiReqId))
 	wrapHeader.wrapheadervar.awsReqLen = (condition(awsReqId))
 	wrapHeader.wrapheadervar.funcNameLen = (condition(funcName))

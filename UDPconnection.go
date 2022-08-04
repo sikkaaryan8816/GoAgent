@@ -9,6 +9,123 @@ package index
 #include <string.h>
 #include "ndlb_encode.h"
 
+void check(){
+	
+    	msgHdr_t msgHdr;
+    	wrapheader_t wrapHeader;
+    	int len = 0;
+    	//int bytesSent = 0;
+    	char *apiReqId="akkdnfjnflffk";
+    	char *awsReqId="lksjskwjdkdldl";
+    	char *funcName="lamdafunion_test1";
+    	int agentType=0;
+    	//int pid=getpid();;
+    char *tags ="tierName=tier_test1;appServerName=server_test1;appName=lamdafunion_test1";
+    wrapHeader.wrapheadervar.apiReqLen = apiReqId ? strlen(apiReqId) : 0;
+    wrapHeader.wrapheadervar.awsReqLen = awsReqId ? strlen(awsReqId) : 0;
+    wrapHeader.wrapheadervar.funcNameLen = funcName ? strlen(funcName) : 0;
+    wrapHeader.wrapheadervar.tagslength = tags ? strlen(tags) : 0;
+    wrapHeader.wrapheadervar.agentType = agentType > 0 ? agentType : 0;
+//    wrapHeader.wrapheadervar.pid = pid > 0 ? pid : 0;
+    wrapHeader.wrapheadervar.whLen = sizeof(wrapheadervar_t)+wrapHeader.wrapheadervar.awsReqLen+wrapHeader.wrapheadervar.apiReqLen+wrapHeader.wrapheadervar.funcNameLen+wrapHeader.wrapheadervar.tagslength+1;
+    fprintf(stderr, "size of struct =%ld\n",sizeof(wrapHeader.wrapheadervar) );
+    memcpy(sBuff, "^", 1);
+    len += 1;
+    memcpy(sBuff + len , (char *)&(wrapHeader.wrapheadervar), sizeof(wrapHeader.wrapheadervar));
+    fprintf(stderr, "asdsfd = %p\n",(char *)&(wrapHeader.wrapheadervar));
+    len += sizeof(wrapheadervar_t);
+    if(wrapHeader.wrapheadervar.apiReqLen>0)
+    {
+      memcpy(sBuff + len, apiReqId, wrapHeader.wrapheadervar.apiReqLen);
+      len += wrapHeader.wrapheadervar.apiReqLen;
+    }
+
+    if(wrapHeader.wrapheadervar.awsReqLen>0)
+    {
+      memcpy(sBuff + len, awsReqId, wrapHeader.wrapheadervar.awsReqLen);
+      len += wrapHeader.wrapheadervar.awsReqLen;
+    }
+
+    if(wrapHeader.wrapheadervar.funcNameLen>0)
+    {
+      memcpy(sBuff + len, funcName, wrapHeader.wrapheadervar.funcNameLen);
+      len += wrapHeader.wrapheadervar.funcNameLen;
+    }
+    if(wrapHeader.wrapheadervar.tagslength>0)
+    {
+      memcpy(sBuff + len, tags, wrapHeader.wrapheadervar.tagslength);
+      len += wrapHeader.wrapheadervar.tagslength;
+    }
+      transactionStart_t node;
+      long qTimeMS =0;
+      long long startTimeFP=0;
+      char *fp_header="header";
+      char *url ="http://10.20.0.85:81/PDO/pdo_test1.php";
+      char *btHeaderValue=NULL;
+      char *ndCookieSet=NULL;
+      char *nvCookieSet=NULL;
+      char *correlationHeader=""; 
+      node.transactionStartVar.qTimeMS = qTimeMS > 0 ? qTimeMS : 0;
+      node.transactionStartVar.startTimeFP = startTimeFP > 0 ? startTimeFP : 0;
+      node.transactionStartVar.fp_header = fp_header ? strlen(fp_header) : 0;
+      node.transactionStartVar.url = url ? strlen(url) : 0;
+      node.transactionStartVar.btHeaderValue = btHeaderValue ? strlen(btHeaderValue) : 0;
+      node.transactionStartVar.ndCookieSet = ndCookieSet ? strlen(ndCookieSet) : 0;
+      node.transactionStartVar.nvCookieSet = nvCookieSet ? strlen(nvCookieSet) : 0;
+      node.transactionStartVar.correlationHeader = correlationHeader  ? strlen(correlationHeader) : 0;
+      msgHdr.header_len = sizeof(msgHdr_t);
+      msgHdr.total_len = sizeof (transactionStartVar_t) + msgHdr.header_len + node.transactionStartVar.fp_header +
+	node.transactionStartVar.ndCookieSet + node.transactionStartVar.nvCookieSet +
+	node.transactionStartVar.correlationHeader +
+	node.transactionStartVar.btHeaderValue +
+	node.transactionStartVar.url + 3;
+      msgHdr.msg_type = 2;
+      memcpy(sBuff+len, "^", 1);
+      len += 1;
+      memcpy(sBuff + len , (char *)&(msgHdr), sizeof(msgHdr_t));
+      len += sizeof(msgHdr_t);
+      memcpy(sBuff + len , "|",1);
+      len += 1;
+      memcpy(sBuff + len, (char *)&(node.transactionStartVar), sizeof(node.transactionStartVar));
+
+      len += sizeof(node.transactionStartVar) ;
+      if(node.transactionStartVar.fp_header)
+      {
+	memcpy(sBuff + len, fp_header, node.transactionStartVar.fp_header);
+	len += node.transactionStartVar.fp_header;
+      }
+
+      if(node.transactionStartVar.url)
+      {
+	memcpy(sBuff + len, url, node.transactionStartVar.url);
+	len += node.transactionStartVar.url;
+      }
+
+      if(node.transactionStartVar.btHeaderValue)
+      {
+	memcpy(sBuff + len, btHeaderValue, node.transactionStartVar.btHeaderValue);
+	len += node.transactionStartVar.btHeaderValue;
+      }
+
+      if(node.transactionStartVar.ndCookieSet)
+      {
+	memcpy(sBuff + len, ndCookieSet, node.transactionStartVar.ndCookieSet);
+	len += node.transactionStartVar.ndCookieSet;
+      }
+
+      if(node.transactionStartVar.nvCookieSet)
+      {
+	memcpy(sBuff + len, nvCookieSet, node.transactionStartVar.nvCookieSet);
+	len += node.transactionStartVar.nvCookieSet;
+      }
+
+      if(node.transactionStartVar.correlationHeader)
+      {
+	memcpy(sBuff + len, correlationHeader, node.transactionStartVar.correlationHeader);
+	len += node.transactionStartVar.correlationHeader;
+      }
+
+  }
 
 int main1(char *s, wrapheader_t *in){
 
@@ -150,9 +267,9 @@ func Header(buf []byte) C.int {
 	wrapHeader.wrapheadervar.awsReqLen = (condition(awsReqId))
 	wrapHeader.wrapheadervar.funcNameLen = (condition(funcName))
 	wrapHeader.wrapheadervar.tagslength = (condition(tags))
-	wrapHeader.wrapheadervar.whLen = C.int(unsafe.Sizeof(wrapHeader.wrapheadervar)) + wrapHeader.wrapheadervar.apiReqLen + wrapHeader.wrapheadervar.awsReqLen + wrapHeader.wrapheadervar.funcNameLen + wrapHeader.wrapheadervar.tagslength + 1
 	wrapHeader.wrapheadervar.agentType = 0
 	wrapHeader.wrapheadervar.messageType = 0
+	wrapHeader.wrapheadervar.whLen = C.int(unsafe.Sizeof(wrapHeader.wrapheadervar)) + wrapHeader.wrapheadervar.apiReqLen + wrapHeader.wrapheadervar.awsReqLen + wrapHeader.wrapheadervar.funcNameLen + wrapHeader.wrapheadervar.tagslength + 1
 	len := C.main1((*C.char)(unsafe.Pointer(&buf[0])), (*C.wrapheader_t)(unsafe.Pointer(&wrapHeader)))
 	a := C.CString(apiReqId)
 	b := C.CString(awsReqId)
@@ -337,8 +454,8 @@ func method_exit() {
 }*/
 
 func StartTransactionMessage(bt_name string, correlationHeader string) {
-
-	var buf = make([]byte, 1024)
+	main1()
+	/*var buf = make([]byte, 1024)
 	var apiReqId = "akkdnfjnflffk"
 	var awsReqId = "lksjskwjdkdldl"
 	var funcName = "lamdafunion_test1"
@@ -421,7 +538,7 @@ func StartTransactionMessage(bt_name string, correlationHeader string) {
 
 	}
 
-	//closeUDP()
+	//closeUDP()*/
 
 }
 

@@ -151,7 +151,7 @@ func Header(buf []byte) C.int {
 	wrapHeader.wrapheadervar.tagslength = (condition(tags))
 	wrapHeader.wrapheadervar.agentType = 0
 	wrapHeader.wrapheadervar.messageType = 0
-	wrapHeader.wrapheadervar.whLen = C.int(unsafe.Sizeof(wrapHeader.wrapheadervar)) + wrapHeader.wrapheadervar.apiReqLen + wrapHeader.wrapheadervar.awsReqLen + wrapHeader.wrapheadervar.funcNameLen + wrapHeader.wrapheadervar.tagslength + 1
+	wrapHeader.wrapheadervar.whLen = C.int(unsafe.Sizeof(*C.wrapheadervar_t)) + wrapHeader.wrapheadervar.apiReqLen + wrapHeader.wrapheadervar.awsReqLen + wrapHeader.wrapheadervar.funcNameLen + wrapHeader.wrapheadervar.tagslength + 1
 	len := C.main1((*C.char)(unsafe.Pointer(&buf[0])), (*C.wrapheader_t)(unsafe.Pointer(&wrapHeader)))
 	a := C.CString(apiReqId)
 	b := C.CString(awsReqId)
@@ -251,7 +251,7 @@ func method_entry() {
 	node.MethodEntryVar.startTime = 0
 
 	msgHdr.header_len = C.int(unsafe.Sizeof(msgHdr))
-	msgHdr.total_len = C.int(unsafe.Sizeof(node.MethodEntryVar)) + msgHdr.header_len + node.MethodEntryVar.methodName + node.MethodEntryVar.query_string + node.MethodEntryVar.urlParameter + 3
+	msgHdr.total_len = C.int(unsafe.Sizeof(*C.MethodEntryVar_t)) + msgHdr.header_len + node.MethodEntryVar.methodName + node.MethodEntryVar.query_string + node.MethodEntryVar.urlParameter + 3
 	msgHdr.msg_type = 0
 	len = C.main4((*C.char)(unsafe.Pointer(&buf[0])), (*C.msgHdr_t)(unsafe.Pointer(&msgHdr)), (*C.MethodEntry_t)(unsafe.Pointer(&node)), len)
 
@@ -301,7 +301,7 @@ func method_exit() {
 	node.MethodExitVar.requestNotificationPhase = condition(requestNotificationPhase)
 
 	msgHdr.header_len = C.int(unsafe.Sizeof(msgHdr))
-	msgHdr.total_len = C.int(unsafe.Sizeof(node.MethodExitVar)) + msgHdr.header_len + node.MethodExitVar.methodName + node.MethodExitVar.backend_header + node.MethodExitVar.requestNotificationPhase + 3
+	msgHdr.total_len = C.int(unsafe.Sizeof(*C.MethodExitVar_t)) + msgHdr.header_len + node.MethodExitVar.methodName + node.MethodExitVar.backend_header + node.MethodExitVar.requestNotificationPhase + 3
 	msgHdr.msg_type = 1
 
 	len = C.main5((*C.char)(unsafe.Pointer(&buf[0])), (*C.msgHdr_t)(unsafe.Pointer(&msgHdr)), (*C.MethodExit_t)(unsafe.Pointer(&node)), len)
@@ -360,7 +360,7 @@ func StartTransactionMessage(bt_name string, correlationHeader string) {
 	var msgHdr msgHdr_t
 	fmt.Println("size of transaction.transactionStartVar-",unsafe.Sizeof(transaction.transactionStartVar))
 	msgHdr.header_len = C.int(unsafe.Sizeof(msgHdr))
-	msgHdr.total_len = C.int(unsafe.Sizeof(transaction.transactionStartVar)) + msgHdr.header_len + transaction.transactionStartVar.fp_header + transaction.transactionStartVar.url + transaction.transactionStartVar.btHeaderValue + transaction.transactionStartVar.ndCookieSet + transaction.transactionStartVar.nvCookieSet + transaction.transactionStartVar.correlationHeader + 3
+	msgHdr.total_len = C.int(unsafe.Sizeof(*C.transactionStartVar_t)) + msgHdr.header_len + transaction.transactionStartVar.fp_header + transaction.transactionStartVar.url + transaction.transactionStartVar.btHeaderValue + transaction.transactionStartVar.ndCookieSet + transaction.transactionStartVar.nvCookieSet + transaction.transactionStartVar.correlationHeader + 3
 	msgHdr.msg_type = 2
 
 	len = C.main3((*C.char)(unsafe.Pointer(&buf[0])), (*C.msgHdr_t)(unsafe.Pointer(&msgHdr)), (*C.transactionStart_t)(unsafe.Pointer(&transaction)), len)
@@ -405,7 +405,7 @@ func end_business_transaction() {
 	var transactionEnd transactionEnd_t
 	var msgHdr msgHdr_t
 	msgHdr.header_len = C.int(unsafe.Sizeof(msgHdr))
-	msgHdr.total_len = C.int(unsafe.Sizeof(transactionEnd)) + msgHdr.header_len + 3
+	msgHdr.total_len = C.int(unsafe.Sizeof(*C.transactionEnd_t)) + msgHdr.header_len + 3
 	msgHdr.msg_type = 3
 
 	transactionEnd.statuscode = 200

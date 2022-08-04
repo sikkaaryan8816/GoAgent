@@ -12,13 +12,12 @@ package index
 int main1(char *s, wrapheader_t *in){
 
     int len = 0;
-    wrapheader_t wrapHeader;
     memcpy(s, "^",1);
     len += 1;
-    memcpy(s + len , (char *)&(in->wrapheadervar), sizeof(wrapHeader.wrapheadervar));
-    len += sizeof(wrapHeader.wrapheadervar);
+    memcpy(s + len , (char *)&(in->wrapheadervar), sizeof(wrapheadervar_t));
+    len += sizeof(wrapheadervar_t);
     fprintf(stderr,"len WH=%d\n",len);
-    fprintf(stderr,"len WH=%ld\n",sizeof(wrapHeader.wrapheadervar));
+    fprintf(stderr,"len WH=%ld\n",sizeof(wrapheadervar_t));
 
   return len;
 }
@@ -30,8 +29,6 @@ int main2(char *s,char *value,int len,int number)
 }
 int main3(char *s,msgHdr_t *in,transactionStart_t *in1,int len)
 {
-    transactionStart_t node;
-    msgHdr_t msgHdr;
     memcpy(s+len, "^",1);
     len += 1;
     memcpy(s + len , (char *)in, sizeof(msgHdr_t) );
@@ -42,8 +39,8 @@ int main3(char *s,msgHdr_t *in,transactionStart_t *in1,int len)
     fprintf(stderr,"len MH=%d\n",len);
     memcpy(s + len , "|",1);
     len += 1;
-    memcpy(s + len, (char *)&(in1->transactionStartVar), sizeof(node.transactionStartVar));
-    len += sizeof(node.transactionStartVar);
+    memcpy(s + len, (char *)&(in1->transactionStartVar), sizeof(transactionStartVar_t));
+    len += sizeof(transactionStartVar_t);
     fprintf(stderr,"len ST=%d\n",len);
     fprintf(stderr,"len MH=%ld\n",sizeof(node.transactionStartVar));
     memcpy(s + len, "\n", 1);
@@ -65,40 +62,17 @@ int main4(char *s,msgHdr_t *in, MethodEntry_t *in1,int len)
     len += sizeof(msgHdr_t);
     memcpy(s + len , "|",1);
     len += 1;
-    memcpy(s + len, (char *)&(in1->MethodEntryVar), sizeof(node.MethodEntryVar));
-    len += sizeof(node.MethodEntryVar);
+    memcpy(s + len, (char *)&(in1->MethodEntryVar), sizeof(MethodEntryVar_t));
+    len += sizeof(MethodEntryVar_t);
     fprintf(stderr,"len MEY=%d\n",len);
-    fprintf(stderr,"len MH=%ld\n",sizeof(node.MethodEntryVar));
+    fprintf(stderr,"len MH=%ld\n",sizeof(MethodEntryVar_t));
     memcpy(s + len, "\n", 1);
     len += 1;
     return len;
 }
 int main5(char *s,msgHdr_t *in, MethodExit_t *in1,int len)
 {
-    msgHdr_t msgHdr;
-    MethodExit_t node;
-    memcpy(s+len, "^",1);
-    len += 1;
-    memcpy(s + len , (char *)in, sizeof(msgHdr_t) );
-    fprintf(stderr,"in->header_len=%d\n",in->header_len);
-    fprintf(stderr,"in->total_len=%d\n",in->total_len);
-    fprintf(stderr,"in->msg_type=%d\n",in->msg_type);
-    len += sizeof(msgHdr);
-    memcpy(s + len , "|",1);
-    len += 1;
-    memcpy(s + len, (char *)&(in1->MethodExitVar), sizeof(node.MethodExitVar));
-    len += sizeof(node.MethodExitVar);
-    fprintf(stderr,"len MET=%d\n",len);
-    fprintf(stderr,"len MH=%ld\n",sizeof(node.MethodExitVar));
-    memcpy(s + len, "\n", 1);
-    len += 1;
-    return len;
-
-}
-int main6(char *s,msgHdr_t *in, transactionEnd_t *in1,int len)
-{
-    msgHdr_t msgHdr;
-    transactionEnd_t node;
+    
     memcpy(s+len, "^",1);
     len += 1;
     memcpy(s + len , (char *)in, sizeof(msgHdr_t) );
@@ -108,10 +82,31 @@ int main6(char *s,msgHdr_t *in, transactionEnd_t *in1,int len)
     len += sizeof(msgHdr_t);
     memcpy(s + len , "|",1);
     len += 1;
-    memcpy(s + len, (char *)in1, sizeof(node));
-    len += sizeof(node);
+    memcpy(s + len, (char *)&(in1->MethodExitVar), sizeof(MethodExitVar_t));
+    len += sizeof(MethodExitVar_t);
+    fprintf(stderr,"len MET=%d\n",len);
+    fprintf(stderr,"len MH=%ld\n",sizeof(MethodExitVar_t));
+    memcpy(s + len, "\n", 1);
+    len += 1;
+    return len;
+
+}
+int main6(char *s,msgHdr_t *in, transactionEnd_t *in1,int len)
+{
+   
+    memcpy(s+len, "^",1);
+    len += 1;
+    memcpy(s + len , (char *)in, sizeof(msgHdr_t) );
+    fprintf(stderr,"in->header_len=%d\n",in->header_len);
+    fprintf(stderr,"in->total_len=%d\n",in->total_len);
+    fprintf(stderr,"in->msg_type=%d\n",in->msg_type);
+    len += sizeof(msgHdr_t);
+    memcpy(s + len , "|",1);
+    len += 1;
+    memcpy(s + len, (char *)in1, sizeof(transactionEnd_t));
+    len += sizeof(transactionEnd_t);
     fprintf(stderr,"len ET=%d\n",len);
-    fprintf(stderr,"len MH=%ld\n",sizeof(node));
+    fprintf(stderr,"len MH=%ld\n",sizeof(transactionEnd_t));
     memcpy(s + len, "\n", 1);
     len += 1;
 }
@@ -246,7 +241,7 @@ func Header(buf []byte) C.int {
 	wrapHeader.wrapheadervar.tagslength = (condition(tags))
 	wrapHeader.wrapheadervar.agentType = 0
 	wrapHeader.wrapheadervar.messageType = 0
-	wrapHeader.wrapheadervar.whLen = 44 + wrapHeader.wrapheadervar.apiReqLen + wrapHeader.wrapheadervar.awsReqLen + wrapHeader.wrapheadervar.funcNameLen + wrapHeader.wrapheadervar.tagslength + 1
+	wrapHeader.wrapheadervar.whLen = C.int(unsafe.Sizeof(wrapHeader.wrapheadervar)) + wrapHeader.wrapheadervar.apiReqLen + wrapHeader.wrapheadervar.awsReqLen + wrapHeader.wrapheadervar.funcNameLen + wrapHeader.wrapheadervar.tagslength + 1
 	len := C.main1((*C.char)(unsafe.Pointer(&buf[0])), (*C.wrapheader_t)(unsafe.Pointer(&wrapHeader)))
 	a := C.CString(apiReqId)
 	b := C.CString(awsReqId)
@@ -346,7 +341,7 @@ func method_entry() {
 	node.MethodEntryVar.startTime = 0
 
 	msgHdr.header_len = 12
-	msgHdr.total_len = 12 + 40 + msgHdr.header_len + node.MethodEntryVar.methodName + node.MethodEntryVar.query_string + node.MethodEntryVar.urlParameter + 3
+	msgHdr.total_len = 12 + 40 + node.MethodEntryVar.methodName + node.MethodEntryVar.query_string + node.MethodEntryVar.urlParameter + 3
 	msgHdr.msg_type = 0
 	len = C.main4((*C.char)(unsafe.Pointer(&buf[0])), (*C.msgHdr_t)(unsafe.Pointer(&msgHdr)), (*C.MethodEntry_t)(unsafe.Pointer(&node)), len)
 
@@ -396,7 +391,7 @@ func method_exit() {
 	node.MethodExitVar.requestNotificationPhase = condition(requestNotificationPhase)
 
 	msgHdr.header_len = 12
-	msgHdr.total_len =  12 + 64 + msgHdr.header_len + node.MethodExitVar.methodName + node.MethodExitVar.backend_header + node.MethodExitVar.requestNotificationPhase + 3
+	msgHdr.total_len =  12 + 76 +  node.MethodExitVar.methodName + node.MethodExitVar.backend_header + node.MethodExitVar.requestNotificationPhase + 3
 	msgHdr.msg_type = 1
 
 	len = C.main5((*C.char)(unsafe.Pointer(&buf[0])), (*C.msgHdr_t)(unsafe.Pointer(&msgHdr)), (*C.MethodExit_t)(unsafe.Pointer(&node)), len)
@@ -455,7 +450,8 @@ func StartTransactionMessage(bt_name string, correlationHeader string) {
 	var msgHdr msgHdr_t
 	fmt.Println("size of transaction.transactionStartVar-",unsafe.Sizeof(transaction.transactionStartVar))
 	msgHdr.header_len = 12
-	msgHdr.total_len = 12 + 48 + msgHdr.header_len + transaction.transactionStartVar.fp_header + transaction.transactionStartVar.url + transaction.transactionStartVar.btHeaderValue + transaction.transactionStartVar.ndCookieSet + transaction.transactionStartVar.nvCookieSet + transaction.transactionStartVar.correlationHeader + 3
+	msgHdr.total_len = 12 + 48  + transaction.transactionStartVar.fp_header + transaction.transactionStartVar.url + transaction.transactionStartVar.btHeaderValue + transaction.transactionStartVar.ndCookieSet + transaction.transactionStartVar.nvCookieSet + transaction.transactionStartVar.correlationHeader + 3
+	
 	msgHdr.msg_type = 2
 
 	len = C.main3((*C.char)(unsafe.Pointer(&buf[0])), (*C.msgHdr_t)(unsafe.Pointer(&msgHdr)), (*C.transactionStart_t)(unsafe.Pointer(&transaction)), len)
@@ -500,7 +496,7 @@ func end_business_transaction() {
 	var transactionEnd transactionEnd_t
 	var msgHdr msgHdr_t
 	msgHdr.header_len = 12
-	msgHdr.total_len = 12 + 20 + msgHdr.header_len + 3
+	msgHdr.total_len = 12 + 28  + 3
 	msgHdr.msg_type = 3
 
 	transactionEnd.statuscode = 200

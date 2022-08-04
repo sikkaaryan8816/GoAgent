@@ -42,7 +42,7 @@ int main3(char *s,msgHdr_t *in,transactionStart_t *in1,int len)
     memcpy(s + len, (char *)&(in1->transactionStartVar), sizeof(transactionStartVar_t));
     len += sizeof(transactionStartVar_t);
     fprintf(stderr,"len ST=%d\n",len);
-    fprintf(stderr,"len MH=%ld\n",sizeof(node.transactionStartVar));
+    fprintf(stderr,"len MH=%ld\n",sizeof(transactionStartVar_t));
     memcpy(s + len, "\n", 1);
     len += 1;
     return len;

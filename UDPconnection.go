@@ -43,8 +43,6 @@ int main3(char *s,msgHdr_t *in,transactionStart_t *in1,int len)
     len += sizeof(transactionStartVar_t);
     fprintf(stderr,"len ST=%d\n",len);
     fprintf(stderr,"len MH=%ld\n",sizeof(transactionStartVar_t));
-    memcpy(s + len, "\n", 1);
-    len += 1;
     return len;
 
 
@@ -66,8 +64,6 @@ int main4(char *s,msgHdr_t *in, MethodEntry_t *in1,int len)
     len += sizeof(MethodEntryVar_t);
     fprintf(stderr,"len MEY=%d\n",len);
     fprintf(stderr,"len MH=%ld\n",sizeof(MethodEntryVar_t));
-    memcpy(s + len, "\n", 1);
-    len += 1;
     return len;
 }
 int main5(char *s,msgHdr_t *in, MethodExit_t *in1,int len)
@@ -86,8 +82,6 @@ int main5(char *s,msgHdr_t *in, MethodExit_t *in1,int len)
     len += sizeof(MethodExitVar_t);
     fprintf(stderr,"len MET=%d\n",len);
     fprintf(stderr,"len MH=%ld\n",sizeof(MethodExitVar_t));
-    memcpy(s + len, "\n", 1);
-    len += 1;
     return len;
 
 }
@@ -109,6 +103,10 @@ int main6(char *s,msgHdr_t *in, transactionEnd_t *in1,int len)
     fprintf(stderr,"len MH=%ld\n",sizeof(transactionEnd_t));
     memcpy(s + len, "\n", 1);
     len += 1;
+}
+int last(char *s,int len)
+{
+ 	memcpy(s + len, "\n", 1);
 }
 */
 import "C"
@@ -357,6 +355,7 @@ func method_entry() {
 	len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), y, len, node.MethodEntryVar.query_string)
 	len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), z, len, node.MethodEntryVar.urlParameter)
 
+	C.last((*C.char)(unsafe.Pointer(&buf[0])),len)
 	_, err := aiRecObj.conn.Write(buf)
 	fmt.Println("send data_MEntry")
 	if err != nil {
@@ -407,6 +406,7 @@ func method_exit() {
 	len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), b, len, node.MethodExitVar.backend_header)
 	len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), c, len, node.MethodExitVar.requestNotificationPhase)
 	fmt.Println("conn value2",aiRecObj.conn)
+	C.last((*C.char)(unsafe.Pointer(&buf[0])),len)
 	_, err := aiRecObj.conn.Write(buf)
 	fmt.Println("send data_MExit")
 	if err != nil {
@@ -474,7 +474,7 @@ func StartTransactionMessage(bt_name string, correlationHeader string) {
 	len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), d, len, transaction.transactionStartVar.ndCookieSet)
 	len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), e, len, transaction.transactionStartVar.nvCookieSet)
 	len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), f, len, transaction.transactionStartVar.correlationHeader)
-
+	C.last((*C.char)(unsafe.Pointer(&buf[0])),len)
 	_, err := aiRecObj.conn.Write(buf)
 	
 	fmt.Println("send data_start")

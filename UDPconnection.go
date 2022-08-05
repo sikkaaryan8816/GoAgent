@@ -511,7 +511,7 @@ func end_business_transaction() {
 		log.Fatal(err)
 
 	}
-	closeUDP()
+	//closeUDP()
 }
 
 

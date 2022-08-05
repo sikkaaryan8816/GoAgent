@@ -241,7 +241,7 @@ func Header(buf []byte) C.int {
 	wrapHeader.wrapheadervar.tagslength = (condition(tags))
 	wrapHeader.wrapheadervar.agentType = 0
 	wrapHeader.wrapheadervar.messageType = 0
-	wrapHeader.wrapheadervar.whLen = 40 + wrapHeader.wrapheadervar.apiReqLen + wrapHeader.wrapheadervar.awsReqLen + wrapHeader.wrapheadervar.funcNameLen + wrapHeader.wrapheadervar.tagslength + 1
+	wrapHeader.wrapheadervar.whLen = 24 + wrapHeader.wrapheadervar.apiReqLen + wrapHeader.wrapheadervar.awsReqLen + wrapHeader.wrapheadervar.funcNameLen + wrapHeader.wrapheadervar.tagslength + 1
 	len := C.main1((*C.char)(unsafe.Pointer(&buf[0])), (*C.wrapheader_t)(unsafe.Pointer(&wrapHeader)))
 	a := C.CString(apiReqId)
 	b := C.CString(awsReqId)

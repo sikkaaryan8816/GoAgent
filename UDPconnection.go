@@ -1,7 +1,5 @@
 package index
 
-//package main
-
 /*
 
 #include <stdio.h>
@@ -9,83 +7,166 @@ package index
 #include <stdlib.h>
 #include <string.h>
 #include "ndlb_encode.h"
-int main1(char *s, wrapheader_t *in){
+
+
+int WrapHeader(char *s,int apiReqLen,int awsReqLen,int funcNameLen,int tagslength,short agentType,short messageType){
     int len = 0;
+    wrapheader_t wrapHeader;
     memcpy(s, "^",1);
     len += 1;
-    memcpy(s + len , (char *)&(in->wrapheadervar), sizeof(wrapheadervar_t));
+    
+    wrapHeader.wrapheadervar.apiReqLen = apiReqLen ;
+    wrapHeader.wrapheadervar.awsReqLen = awsReqLen ;
+    wrapHeader.wrapheadervar.funcNameLen = funcNameLen ;
+    wrapHeader.wrapheadervar.tagslength = tagslength ;
+    wrapHeader.wrapheadervar.agentType = agentType ;
+    wrapHeader.wrapheadervar.messageType = messageType;
+    wrapHeader.wrapheadervar.whLen = sizeof(wrapheadervar_t)+wrapHeader.wrapheadervar.awsReqLen+wrapHeader.wrapheadervar.apiReqLen+wrapHeader.wrapheadervar.funcNameLen+wrapHeader.wrapheadervar.tagslength+1;
+
+    memcpy(s + len , (char *)&(wrapHeader.wrapheadervar), sizeof(wrapHeader.wrapheadervar));
     len += sizeof(wrapheadervar_t);
-   
+
   return len;
 }
-int main2(char *s,char *value,int len,int number)
+
+int ValueStore(char *s,char *value,int len,int number)
 {
-      
+
       memcpy(s + len, value ,number);
       len += number;
-    return len;
+      return len;
 }
-int main3(char *s,msgHdr_t *in,transactionStart_t *in1,int len)
+
+int StartTransaction(char *s,int fp_header,int url,int btHeaderValue,int ndCookieSet,int nvCookieSet,int correlationHeader,long long flowpathinstance,long qTimeMS,long long startTimeFP,int len)
 {
+    transactionStart_t node;
+    msgHdr_t msgHdr;
     memcpy(s+len, "^",1);
     len += 1;
-    memcpy(s + len , (char *)in, sizeof(msgHdr_t) );
     
-    len += sizeof(msgHdr_t);
-    
+    node.transactionStartVar.qTimeMS = qTimeMS ;
+    node.transactionStartVar.startTimeFP = startTimeFP;
+    node.transactionStartVar.fp_header = fp_header ;
+    node.transactionStartVar.url = url ;
+    node.transactionStartVar.btHeaderValue = btHeaderValue ;
+    node.transactionStartVar.ndCookieSet = ndCookieSet ;
+    node.transactionStartVar.nvCookieSet = nvCookieSet ;
+    node.transactionStartVar.correlationHeader = correlationHeader ;
+    node.transactionStartVar.flowpathinstance = flowpathinstance;
+
+    msgHdr.header_len = sizeof(msgHdr_t);
+    msgHdr.total_len = sizeof (transactionStartVar_t) + msgHdr.header_len + node.transactionStartVar.fp_header +
+    node.transactionStartVar.ndCookieSet + node.transactionStartVar.nvCookieSet +
+    node.transactionStartVar.correlationHeader +
+    node.transactionStartVar.btHeaderValue +
+    node.transactionStartVar.url + 3;
+    msgHdr.msg_type = 2;
+
+    memcpy(s + len , (char *)&(msgHdr), msgHdr.header_len);
+    len += sizeof(msgHdr);
+
+
     memcpy(s + len , "|",1);
     len += 1;
-    memcpy(s + len, (char *)&(in1->transactionStartVar), sizeof(transactionStartVar_t));
-    len += sizeof(transactionStartVar_t);
-    
+    memcpy(s + len, (char *)&(node.transactionStartVar), sizeof(node.transactionStartVar));
+    len += sizeof(node.transactionStartVar) ;
+
     return len;
 }
 
-int main4(char *s,msgHdr_t *in, MethodEntry_t *in1,int len)
+int MethodEntry(char *s,int urlParameter,int methodName,int query_string,int mid,long long flowpathinstance,long threadId,long long startTime,int len)
 {
     msgHdr_t msgHdr;
     MethodEntry_t node;
     memcpy(s+len, "^",1);
     len += 1;
-    memcpy(s + len , (char *)in, sizeof(msgHdr_t) );
-   
-    len += sizeof(msgHdr_t);
+    
+    node.MethodEntryVar.methodName = methodName ;
+    node.MethodEntryVar.threadId= threadId;
+    node.MethodEntryVar.query_string = query_string ;
+    node.MethodEntryVar.urlParameter = urlParameter ;
+    node.MethodEntryVar.mid = mid ;
+    node.MethodEntryVar.startTime = startTime ;
+    node.MethodEntryVar.flowpathinstance = flowpathinstance;
+
+    msgHdr.header_len = sizeof(msgHdr_t);
+    msgHdr.total_len = sizeof(MethodEntryVar_t) + msgHdr.header_len + node.MethodEntryVar.methodName +
+    node.MethodEntryVar.query_string+ node.MethodEntryVar.urlParameter + 3;
+    msgHdr.msg_type = 0;
+    memcpy(s + len , (char *)&(msgHdr), msgHdr.header_len);
+    len += sizeof(msgHdr);
+
+
     memcpy(s + len , "|",1);
     len += 1;
-    memcpy(s + len, (char *)&(in1->MethodEntryVar), sizeof(MethodEntryVar_t));
+    memcpy(s + len, (char *)&(node.MethodEntryVar), sizeof(MethodEntryVar_t));
     len += sizeof(MethodEntryVar_t);
-   
+
     return len;
 }
 
-int main5(char *s,msgHdr_t *in, MethodExit_t *in1,int len)
+int MethodExit(char *s,int statusCode,int mid,int eventType,int isCallout,long duration,long threadId,long long cpuTime,long long flowpathinstance,long long tierCallOutSeqNum,long long endTime,int methodName,int backend_header,int requestNotificationPhase,int len)
 {
-
+    MethodExit_t node;
+    msgHdr_t msgHdr;
     memcpy(s+len, "^",1);
     len += 1;
-    memcpy(s + len , (char *)in, sizeof(msgHdr_t) );
-    
-    len += sizeof(msgHdr_t);
+
+    node.MethodExitVar.statusCode = statusCode ;
+    node.MethodExitVar.mid = mid ;
+    node.MethodExitVar.eventType = eventType;
+    node.MethodExitVar.isCallout = isCallout;
+    node.MethodExitVar.duration = duration;
+    node.MethodExitVar.threadId = threadId;
+    node.MethodExitVar.cpuTime = cpuTime;
+    node.MethodExitVar.tierCallOutSeqNum = tierCallOutSeqNum ;
+    node.MethodExitVar.endTime = endTime ;
+    node.MethodExitVar.methodName = methodName ;
+    node.MethodExitVar.backend_header = backend_header;
+    node.MethodExitVar.requestNotificationPhase = requestNotificationPhase ;
+
+    msgHdr.header_len = sizeof(msgHdr_t);
+    msgHdr.total_len = sizeof(MethodExitVar_t)+ msgHdr.header_len + node.MethodExitVar.methodName + node.MethodExitVar.backend_header +
+    node.MethodExitVar.requestNotificationPhase + 3;
+    msgHdr.msg_type = 1;
+    memcpy(s + len , (char *)&(msgHdr), msgHdr.header_len);
+    len += sizeof(msgHdr);
+
+
     memcpy(s + len , "|",1);
     len += 1;
-    memcpy(s + len, (char *)&(in1->MethodExitVar), sizeof(MethodExitVar_t));
+    memcpy(s + len, (char *)&(node.MethodExitVar), sizeof(node.MethodExitVar));
     len += sizeof(MethodExitVar_t);
-   
+
     return len;
 }
-int main6(char *s,msgHdr_t *in, transactionEnd_t *in1,int len)
-{
 
+int EndTransaction(char *s,int statuscode,long long endTime,long long flowpathinstance,long long cpuTime ,int len)
+{
+    transactionEnd_t transactionEnd;
+    int N=sizeof (transactionEnd_t);
+    msgHdr_t msgHdr;
     memcpy(s+len, "^",1);
     len += 1;
-    memcpy(s + len , (char *)in, sizeof(msgHdr_t) );
+    
+    transactionEnd.statuscode = statuscode ;
+    transactionEnd.endTime = endTime ;
+    transactionEnd.flowpathinstance = flowpathinstance;
+    transactionEnd.cpuTime = cpuTime;
    
+    msgHdr.header_len = sizeof(msgHdr_t);
+    msgHdr.total_len = msgHdr.header_len + N + 3;
+    msgHdr.msg_type = 3;
+
+    memcpy(s + len , (char *)&(msgHdr), sizeof(msgHdr_t));
     len += sizeof(msgHdr_t);
+
+
     memcpy(s + len , "|",1);
     len += 1;
-    memcpy(s + len, (char *)in1, sizeof(transactionEnd_t));
-    len += sizeof(transactionEnd_t);
-    
+    memcpy(s + len, (void *)&transactionEnd, N);
+    len += N;
+
     return len;
 
 }
@@ -102,114 +183,10 @@ import (
     "net"
     "time"
     "unsafe"
-    //"encoding/binary"
-    //"sync"
-    //"bufio"
-    //"github.com/google/uuid"
-    //"math/big"
-    //"strings"
+    
 )
 
-type transactionStartVar_t struct {
-    fp_header         C.int
-    url               C.int
-    btHeaderValue     C.int
-    ndCookieSet       C.int
-    nvCookieSet       C.int
-    correlationHeader C.int
-    flowpathinstance  C.longlong
-    qTimeMS           C.long
-    startTimeFP       C.longlong
-}
 
-type transactionStart_t struct {
-    transactionStartVar transactionStartVar_t
-
-    fp_header         *C.char
-    url               *C.char
-    btHeaderValue     *C.char
-    ndCookieSet       *C.char
-    nvCookieSet       *C.char
-    correlationHeader *C.char
-}
-
-type msgHdr_t struct {
-    header_len C.int
-    total_len  C.int
-    msg_type   C.int
-}
-
-type MethodEntryVar_t struct {
-    mid C.int
-
-    flowpathinstance C.longlong
-    threadId         C.long
-    startTime        C.int
-
-    methodName   C.int
-    query_string C.int
-    urlParameter C.int
-}
-
-type MethodEntry_t struct {
-    MethodEntryVar MethodEntryVar_t
-
-    methodName   *C.char
-    query_string *C.char
-    urlParameter *C.char
-}
-type MethodExitVar_t struct {
-    statusCode       C.int
-    mid              C.int
-    eventType        C.int
-    isCallout        C.int
-    threadId         C.long
-    duration         C.long
-    flowpathinstance C.longlong
-    cpuTime          C.longlong
-
-    methodName               C.int
-    backend_header           C.int
-    requestNotificationPhase C.int
-    tierCallOutSeqNum        C.longlong
-    endTime                  C.longlong
-}
-
-type MethodExit_t struct {
-    MethodExitVar MethodExitVar_t
-
-    methodName               *C.char
-    backend_header           *C.char
-    requestNotificationPhase *C.char
-}
-type transactionEnd_t struct {
-    statuscode       C.int
-    flowpathinstance C.longlong
-    endTime          C.longlong
-    cpuTime          C.longlong
-}
-type wrapheadervar_t struct {
-    whLen       C.int
-    apiReqLen   C.int
-    awsReqLen   C.int
-    funcNameLen C.int
-    tagslength  C.int
-    agentType   C.short
-    messageType C.short
-}
-
-type wrapheader_t struct {
-    wrapheadervar wrapheadervar_t
-    apiReqId      *C.char
-    awsReqId      *C.char
-    funcName      *C.char
-    tags          *C.char //; separated key=value pairs
-}
-
-func closeUDP() {
-    aiRecObj.conn.Close()
-    fmt.Println("close")
-}
 
 func Header(buf []byte) C.int {
 
@@ -219,15 +196,15 @@ func Header(buf []byte) C.int {
     //var agentType= 0
     //var messageType = 0
     var tags = "tierName=tier_test1;ndAppServerHost=server_test1;appName=lamdafunion_test1"
-    var wrapHeader wrapheader_t
-    wrapHeader.wrapheadervar.apiReqLen = (condition(apiReqId))
-    wrapHeader.wrapheadervar.awsReqLen = (condition(awsReqId))
-    wrapHeader.wrapheadervar.funcNameLen = (condition(funcName))
-    wrapHeader.wrapheadervar.tagslength = (condition(tags))
-    wrapHeader.wrapheadervar.agentType = 0
-    wrapHeader.wrapheadervar.messageType = 0
-    wrapHeader.wrapheadervar.whLen = 24 + wrapHeader.wrapheadervar.apiReqLen + wrapHeader.wrapheadervar.awsReqLen + wrapHeader.wrapheadervar.funcNameLen + wrapHeader.wrapheadervar.tagslength + 1
-    len := C.main1((*C.char)(unsafe.Pointer(&buf[0])), (*C.wrapheader_t)(unsafe.Pointer(&wrapHeader)))
+
+    var apiReqLen = C.int(len(apiReqId))
+    var awsReqLen = C.int(len(awsReqId))
+    var funcNameLen = C.int(len(funcName))
+    var tagslength = C.int(len(tags))
+    var agentType = C.short(0)
+    var messageType = C.short(0)
+
+    len := C.WrapHeader((*C.char)(unsafe.Pointer(&buf[0])), apiReqLen, awsReqLen, funcNameLen, tagslength, agentType, messageType)
     a := C.CString(apiReqId)
     b := C.CString(awsReqId)
     c := C.CString(funcName)
@@ -237,13 +214,14 @@ func Header(buf []byte) C.int {
     defer C.free(unsafe.Pointer(c))
     defer C.free(unsafe.Pointer(d))
 
-    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), a, len, wrapHeader.wrapheadervar.apiReqLen)
-    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), b, len, wrapHeader.wrapheadervar.awsReqLen)
-    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), c, len, wrapHeader.wrapheadervar.funcNameLen)
-    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), d, len, wrapHeader.wrapheadervar.tagslength)
+    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), a, len, apiReqLen)
+    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), b, len, awsReqLen)
+    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), c, len, funcNameLen)
+    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), d, len, tagslength)
 
     return len
 }
+
 
 type aiRecord struct {
     conn net.Conn

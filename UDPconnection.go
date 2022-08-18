@@ -232,7 +232,7 @@ var err error
 
 func NewAIRecord() *aiRecord {
     r := aiRecord{}
-    r.conn, err = net.Dial("udp", "127.0.0.1:1224")
+    r.conn, err = net.Dial("udp", "66.220.31.147:1224")
     if err != nil {
         fmt.Printf("Some error %v", err)
     }

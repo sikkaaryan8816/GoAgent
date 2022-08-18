@@ -193,8 +193,7 @@ func Header(buf []byte) C.int {
     var apiReqId = "akkdnfjnflffk"
     var awsReqId = "lksjskwjdkdldl"
     var funcName = "lamdafunion_test1"
-    //var agentType= 0
-    //var messageType = 0
+    
     var tags = "tierName=tier_test1;ndAppServerHost=server_test1;appName=lamdafunion_test1"
 
     var apiReqLen = C.int(len(apiReqId))
@@ -205,6 +204,7 @@ func Header(buf []byte) C.int {
     var messageType = C.short(0)
 
     len := C.WrapHeader((*C.char)(unsafe.Pointer(&buf[0])), apiReqLen, awsReqLen, funcNameLen, tagslength, agentType, messageType)
+    
     a := C.CString(apiReqId)
     b := C.CString(awsReqId)
     c := C.CString(funcName)
@@ -232,12 +232,17 @@ var err error
 
 func NewAIRecord() *aiRecord {
     r := aiRecord{}
-    r.conn, err = net.Dial("udp", "66.220.31.147:1224")
+    r.conn, err = net.Dial("udp", "127.0.0.1:1224")
     if err != nil {
         fmt.Printf("Some error %v", err)
     }
     fmt.Println("conn value", r.conn)
     return &r
+}
+
+func CloseUDP() {
+    aiRecObj.conn.Close()
+    fmt.Println("close")
 }
 
 func UDPConnection() {
@@ -251,35 +256,12 @@ func UDPConnection() {
 
 }
 
-func condition(a string) C.int {
-
-    if a == "" {
-        return 0
-    }
-    return C.int(len(a))
-}
-
 /*func ReceiveMessageFromServer() {
     request := make([]byte, 1024)
     a, err := aiRecObj.conn.Read(request)
     //a :=len(request)
     fmt.Println("request=", string(request), a)
 }*/
-
-//func main() {
-func create_start_transaction_message(bt_name, nil string) {
-    bt_name := "defult"
-    UDPConnection()
-
-    StartTransactionMessage(bt_name, "")
-    method_entry()
-    method_exit()
-    end_business_transaction()
-    //fmt.Println(generate_bt())
-    //bt := 1
-    //return bt
-    //closeUDP()
-}
 
 /*func generate_bt() {
     id := uuid.New().String()
@@ -288,42 +270,34 @@ func create_start_transaction_message(bt_name, nil string) {
     return i.String()
 }*/
 
-func StartTransactionMessage(bt_name string, correlationHeader string) {
+func StartTransactionMessage(bt_name string, correlationHeader1 string) {
 
     var buf = make([]byte, 1024)
-    len := Header(buf)
-    fp_header := "dummy_fp_header"
-    url := bt_name
-    btHeaderValue := "dummy_btHeaderValue"
-    ndCookieSet := ""
-    nvCookieSet := ""
-    correlationHeader = "dummy_correlationHeader"
+    lenght := Header(buf)
+    var fp_header1 = "dummy_fp_header"
+    var url1 = bt_name
+    btHeaderValue1 := "dummy_btHeaderValue"
+    ndCookieSet1 := ""
+    nvCookieSet1 := ""
 
-    var transaction transactionStart_t
+    var fp_header = C.int(len(fp_header1))
+    var url = C.int(len(url1))
+    var btHeaderValue = C.int(len(btHeaderValue1))
+    var ndCookieSet = C.int(len(ndCookieSet1))
+    var nvCookieSet = C.int(len(nvCookieSet1))
+    var correlationHeader = C.int(len(correlationHeader1))
+    var flowpathinstance = C.longlong(0)
+    var startTimeFP = C.longlong(0)
+    var qTimeMS = C.long(0)
 
-    transaction.transactionStartVar.fp_header = (condition(fp_header))
-    transaction.transactionStartVar.url = (condition(url))
-    transaction.transactionStartVar.btHeaderValue = (condition(btHeaderValue))
-    transaction.transactionStartVar.ndCookieSet = (condition(ndCookieSet))
-    transaction.transactionStartVar.nvCookieSet = (condition(nvCookieSet))
-    transaction.transactionStartVar.correlationHeader = (condition(correlationHeader))
-    transaction.transactionStartVar.flowpathinstance = 0
-    transaction.transactionStartVar.startTimeFP = 0
-    transaction.transactionStartVar.qTimeMS = 0
-    var msgHdr msgHdr_t
-   
-    msgHdr.header_len = 12
-    msgHdr.total_len = 12 + 48 + transaction.transactionStartVar.fp_header + transaction.transactionStartVar.url + transaction.transactionStartVar.btHeaderValue + transaction.transactionStartVar.ndCookieSet + transaction.transactionStartVar.nvCookieSet + transaction.transactionStartVar.correlationHeader + 3
+    lenght = C.main3((*C.char)(unsafe.Pointer(&buf[0])), fp_header, url, btHeaderValue, ndCookieSet, nvCookieSet, correlationHeader, flowpathinstance, qTimeMS, startTimeFP, lenght)
 
-    msgHdr.msg_type = 2
-
-    len = C.main3((*C.char)(unsafe.Pointer(&buf[0])), (*C.msgHdr_t)(unsafe.Pointer(&msgHdr)), (*C.transactionStart_t)(unsafe.Pointer(&transaction)), len)
-    a := C.CString(fp_header)
-    b := C.CString(url)
-    c := C.CString(btHeaderValue)
-    d := C.CString(ndCookieSet)
-    e := C.CString(nvCookieSet)
-    f := C.CString(correlationHeader)
+    a := C.CString(fp_header1)
+    b := C.CString(url1)
+    c := C.CString(btHeaderValue1)
+    d := C.CString(ndCookieSet1)
+    e := C.CString(nvCookieSet1)
+    f := C.CString(correlationHeader1)
     defer C.free(unsafe.Pointer(a))
     defer C.free(unsafe.Pointer(b))
     defer C.free(unsafe.Pointer(c))
@@ -331,13 +305,13 @@ func StartTransactionMessage(bt_name string, correlationHeader string) {
     defer C.free(unsafe.Pointer(e))
     defer C.free(unsafe.Pointer(f))
 
-    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), a, len, transaction.transactionStartVar.fp_header)
-    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), b, len, transaction.transactionStartVar.url)
-    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), c, len, transaction.transactionStartVar.btHeaderValue)
-    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), d, len, transaction.transactionStartVar.ndCookieSet)
-    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), e, len, transaction.transactionStartVar.nvCookieSet)
-    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), f, len, transaction.transactionStartVar.correlationHeader)
-    C.last((*C.char)(unsafe.Pointer(&buf[0])), len)
+    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), a, lenght, fp_header)
+    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), b, lenght, url)
+    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), c, lenght, btHeaderValue)
+    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), d, lenght, ndCookieSet)
+    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), e, lenght, nvCookieSet)
+    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), f, lenght, correlationHeader)
+    C.last((*C.char)(unsafe.Pointer(&buf[0])), lenght)
     _, err := aiRecObj.conn.Write(buf)
 
     fmt.Println("send data_start")
@@ -353,42 +327,34 @@ func StartTransactionMessage(bt_name string, correlationHeader string) {
 
 func method_entry() {
     var buf = make([]byte, 1024)
-    len := Header(buf)
-    fmt.Println("len in Wraph", len)
-    var node MethodEntry_t
-    var msgHdr msgHdr_t
+    lenght := Header(buf)
 
-    methodName := "custom_method_name"
-    query_string := "select * from countries"
-    urlParameter := ""
+    methodName1 := "custom_method_name"
+    query_string1 := "select * from countries"
+    urlParameter1 := ""
 
-    node.MethodEntryVar.mid = 23
-    node.MethodEntryVar.flowpathinstance = 0
-    node.MethodEntryVar.threadId = 0
-    node.MethodEntryVar.startTime = 0
-    node.MethodEntryVar.methodName = (condition(methodName))
-    node.MethodEntryVar.query_string = (condition(query_string))
-    node.MethodEntryVar.urlParameter = (condition(urlParameter))
-    fmt.Println(node.MethodEntryVar.methodName, "hee")
-    msgHdr.header_len = 12
-    msgHdr.total_len = 12 + 40 + node.MethodEntryVar.methodName + node.MethodEntryVar.query_string + node.MethodEntryVar.urlParameter + 3
-    msgHdr.msg_type = 0
+    var urlParameter = C.int(len(urlParameter1))
+    var methodName = C.int(len(methodName1))
+    var query_string = C.int(len(query_string1))
+    var mid = C.int(23)
+    var flowpathinstance = C.longlong(0)
+    var threadId = C.long(0)
+    var startTime = C.longlong(0)
 
-    len = C.main4((*C.char)(unsafe.Pointer(&buf[0])), (*C.msgHdr_t)(unsafe.Pointer(&msgHdr)), (*C.MethodEntry_t)(unsafe.Pointer(&node)), len)
-   
-    
-    a := C.CString(methodName)
-    b := C.CString(query_string)
-    c := C.CString(urlParameter)
+    lenght = C.main4((*C.char)(unsafe.Pointer(&buf[0])), urlParameter, methodName, query_string, mid, flowpathinstance, threadId, startTime, lenght)
+
+    a := C.CString(methodName1)
+    b := C.CString(query_string1)
+    c := C.CString(urlParameter1)
     defer C.free(unsafe.Pointer(a))
     defer C.free(unsafe.Pointer(b))
     defer C.free(unsafe.Pointer(c))
 
-    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), a, len, node.MethodEntryVar.methodName)
-    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), b, len, node.MethodEntryVar.query_string)
-    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), c, len, node.MethodEntryVar.urlParameter)
+    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), a, lenght, methodName)
+    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), b, lenght, query_string)
+    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), c, lenght, urlParameter)
 
-    C.last((*C.char)(unsafe.Pointer(&buf[0])), len)
+    C.last((*C.char)(unsafe.Pointer(&buf[0])), lenght)
 
     _, err := aiRecObj.conn.Write(buf)
     fmt.Println("send data_MEntry")
@@ -398,48 +364,44 @@ func method_entry() {
     }
 }
 
+
 func method_exit() {
 
     var buf = make([]byte, 1024)
-    len := Header(buf)
-    var node MethodExit_t
-    var msgHdr msgHdr_t
-    methodName := "custom_method_name"
-    backend_header := "NA|10.20.0.85|NA|NA|mydb|mysql|NA|NA|NA|root"
-    requestNotificationPhase := ""
+    lenght := Header(buf)
 
-    node.MethodExitVar.statusCode = 200
-    node.MethodExitVar.mid = 12
-    node.MethodExitVar.eventType = 1
-    node.MethodExitVar.isCallout = 1
-    node.MethodExitVar.duration = 363
-    node.MethodExitVar.threadId = 0
-    node.MethodExitVar.cpuTime = 0
-    node.MethodExitVar.flowpathinstance = 0
-    node.MethodExitVar.tierCallOutSeqNum = 45
-    node.MethodExitVar.endTime = 0
-    node.MethodExitVar.methodName = condition(methodName)
-    node.MethodExitVar.backend_header = condition(backend_header)
-    node.MethodExitVar.requestNotificationPhase = condition(requestNotificationPhase)
+    methodName1 := "custom_method_name"
+    backend_header1 := "NA|10.20.0.85|NA|NA|mydb|mysql|NA|NA|NA|root"
+    requestNotificationPhase1 := ""
 
-    msgHdr.header_len = 12
-    msgHdr.total_len = 12 + 76 + node.MethodExitVar.methodName + node.MethodExitVar.backend_header + node.MethodExitVar.requestNotificationPhase + 3
-    msgHdr.msg_type = 1
+    var statusCode = C.int(200)
+    var mid = C.int(12)
+    var eventType = C.int(1)
+    var isCallout = C.int(1)
+    var duration = C.long(363)
+    var threadId = C.long(0)
+    var cpuTime = C.longlong(0)
+    var flowpathinstance = C.longlong(0)
+    var tierCallOutSeqNum = C.longlong(45)
+    var endTime = C.longlong(0)
+    var methodName = C.int(len(methodName1))
+    var backend_header = C.int(len(backend_header1))
+    var requestNotificationPhase = C.int(len(requestNotificationPhase1))
 
-    len = C.main5((*C.char)(unsafe.Pointer(&buf[0])), (*C.msgHdr_t)(unsafe.Pointer(&msgHdr)), (*C.MethodExit_t)(unsafe.Pointer(&node)), len)
-    a := C.CString(methodName)
-    b := C.CString(backend_header)
-    c := C.CString(requestNotificationPhase)
+    lenght = C.main5((*C.char)(unsafe.Pointer(&buf[0])), statusCode, mid, eventType, isCallout, duration, threadId, cpuTime, flowpathinstance, tierCallOutSeqNum, endTime, methodName, backend_header, requestNotificationPhase, lenght)
+    a := C.CString(methodName1)
+    b := C.CString(backend_header1)
+    c := C.CString(requestNotificationPhase1)
 
     defer C.free(unsafe.Pointer(a))
     defer C.free(unsafe.Pointer(b))
     defer C.free(unsafe.Pointer(c))
 
-    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), a, len, node.MethodExitVar.methodName)
-    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), b, len, node.MethodExitVar.backend_header)
-    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), c, len, node.MethodExitVar.requestNotificationPhase)
+    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), a, lenght, methodName)
+    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), b, lenght, backend_header)
+    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), c, lenght, requestNotificationPhase)
 
-    C.last((*C.char)(unsafe.Pointer(&buf[0])), len)
+    C.last((*C.char)(unsafe.Pointer(&buf[0])), lenght)
     _, err := aiRecObj.conn.Write(buf)
     fmt.Println("send data_MExit")
     if err != nil {
@@ -450,30 +412,24 @@ func method_exit() {
 }
 
 func end_business_transaction() {
-    UDPConnection()
+
     var buf = make([]byte, 1024)
-    len := Header(buf)
+    lenght := Header(buf)
 
-    var transactionEnd transactionEnd_t
-    var msgHdr msgHdr_t
-    msgHdr.header_len = 12
-    msgHdr.total_len = 12 + 28 + 3
-    msgHdr.msg_type = 3
+    var statuscode = C.int(200)
+    var endTime = C.longlong(0)
+    var flowpathinstance = C.longlong(0)
+    var cpuTime = C.longlong(0)
 
-    transactionEnd.statuscode = 200
-    transactionEnd.endTime = 0
-    transactionEnd.flowpathinstance = 0
-    transactionEnd.cpuTime = 0
-
-    len = C.main6((*C.char)(unsafe.Pointer(&buf[0])), (*C.msgHdr_t)(unsafe.Pointer(&msgHdr)), (*C.transactionEnd_t)(unsafe.Pointer(&transactionEnd)), len)
-    C.last((*C.char)(unsafe.Pointer(&buf[0])), len)
+    lenght = C.main6((*C.char)(unsafe.Pointer(&buf[0])), statuscode, endTime, flowpathinstance, cpuTime, lenght)
+    C.last((*C.char)(unsafe.Pointer(&buf[0])), lenght)
     _, err := aiRecObj.conn.Write(buf)
     fmt.Println("send data_end")
     if err != nil {
         log.Fatal(err)
 
     }
-    closeUDP()
+
 }
 
 

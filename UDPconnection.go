@@ -74,7 +74,7 @@ int StartTransaction(char *s,int fp_header,int url,int btHeaderValue,int ndCooki
     return len;
 }
 
-int MethodEntry(char *s,int urlParameter,int methodName,int query_string,int mid,long long flowpathinstance,long threadId,long long startTime,int len)
+int MethodEntryFunction(char *s,int urlParameter,int methodName,int query_string,int mid,long long flowpathinstance,long threadId,long long startTime,int len)
 {
     msgHdr_t msgHdr;
     MethodEntry_t node;
@@ -105,7 +105,7 @@ int MethodEntry(char *s,int urlParameter,int methodName,int query_string,int mid
     return len;
 }
 
-int MethodExit(char *s,int statusCode,int mid,int eventType,int isCallout,long duration,long threadId,long long cpuTime,long long flowpathinstance,long long tierCallOutSeqNum,long long endTime,int methodName,int backend_header,int requestNotificationPhase,int len)
+int MethodExitFunction(char *s,int statusCode,int mid,int eventType,int isCallout,long duration,long threadId,long long cpuTime,long long flowpathinstance,long long tierCallOutSeqNum,long long endTime,int methodName,int backend_header,int requestNotificationPhase,int len)
 {
     MethodExit_t node;
     msgHdr_t msgHdr;
@@ -341,7 +341,7 @@ func method_entry() {
     var threadId = C.long(0)
     var startTime = C.longlong(0)
 
-    lenght = C.MethodEntry((*C.char)(unsafe.Pointer(&buf[0])), urlParameter, methodName, query_string, mid, flowpathinstance, threadId, startTime, lenght)
+    lenght = C.MethodEntryFunction((*C.char)(unsafe.Pointer(&buf[0])), urlParameter, methodName, query_string, mid, flowpathinstance, threadId, startTime, lenght)
 
     a := C.CString(methodName1)
     b := C.CString(query_string1)
@@ -388,7 +388,7 @@ func method_exit() {
     var backend_header = C.int(len(backend_header1))
     var requestNotificationPhase = C.int(len(requestNotificationPhase1))
 
-    lenght = C.MethodExit((*C.char)(unsafe.Pointer(&buf[0])), statusCode, mid, eventType, isCallout, duration, threadId, cpuTime, flowpathinstance, tierCallOutSeqNum, endTime, methodName, backend_header, requestNotificationPhase, lenght)
+    lenght = C.MethodExitFunction((*C.char)(unsafe.Pointer(&buf[0])), statusCode, mid, eventType, isCallout, duration, threadId, cpuTime, flowpathinstance, tierCallOutSeqNum, endTime, methodName, backend_header, requestNotificationPhase, lenght)
     a := C.CString(methodName1)
     b := C.CString(backend_header1)
     c := C.CString(requestNotificationPhase1)

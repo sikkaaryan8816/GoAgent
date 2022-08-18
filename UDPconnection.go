@@ -214,10 +214,10 @@ func Header(buf []byte) C.int {
     defer C.free(unsafe.Pointer(c))
     defer C.free(unsafe.Pointer(d))
 
-    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), a, len, apiReqLen)
-    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), b, len, awsReqLen)
-    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), c, len, funcNameLen)
-    len = C.main2((*C.char)(unsafe.Pointer(&buf[0])), d, len, tagslength)
+    len = C.ValueStore((*C.char)(unsafe.Pointer(&buf[0])), a, len, apiReqLen)
+    len = C.ValueStore((*C.char)(unsafe.Pointer(&buf[0])), b, len, awsReqLen)
+    len = C.ValueStore((*C.char)(unsafe.Pointer(&buf[0])), c, len, funcNameLen)
+    len = C.ValueStore((*C.char)(unsafe.Pointer(&buf[0])), d, len, tagslength)
 
     return len
 }
@@ -290,7 +290,7 @@ func StartTransactionMessage(bt_name string, correlationHeader1 string) {
     var startTimeFP = C.longlong(0)
     var qTimeMS = C.long(0)
 
-    lenght = C.main3((*C.char)(unsafe.Pointer(&buf[0])), fp_header, url, btHeaderValue, ndCookieSet, nvCookieSet, correlationHeader, flowpathinstance, qTimeMS, startTimeFP, lenght)
+    lenght = C.StartTransaction((*C.char)(unsafe.Pointer(&buf[0])), fp_header, url, btHeaderValue, ndCookieSet, nvCookieSet, correlationHeader, flowpathinstance, qTimeMS, startTimeFP, lenght)
 
     a := C.CString(fp_header1)
     b := C.CString(url1)
@@ -305,12 +305,12 @@ func StartTransactionMessage(bt_name string, correlationHeader1 string) {
     defer C.free(unsafe.Pointer(e))
     defer C.free(unsafe.Pointer(f))
 
-    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), a, lenght, fp_header)
-    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), b, lenght, url)
-    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), c, lenght, btHeaderValue)
-    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), d, lenght, ndCookieSet)
-    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), e, lenght, nvCookieSet)
-    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), f, lenght, correlationHeader)
+    lenght = C.ValueStore((*C.char)(unsafe.Pointer(&buf[0])), a, lenght, fp_header)
+    lenght = C.ValueStore((*C.char)(unsafe.Pointer(&buf[0])), b, lenght, url)
+    lenght = C.ValueStore((*C.char)(unsafe.Pointer(&buf[0])), c, lenght, btHeaderValue)
+    lenght = C.ValueStore((*C.char)(unsafe.Pointer(&buf[0])), d, lenght, ndCookieSet)
+    lenght = C.ValueStore((*C.char)(unsafe.Pointer(&buf[0])), e, lenght, nvCookieSet)
+    lenght = C.ValueStore((*C.char)(unsafe.Pointer(&buf[0])), f, lenght, correlationHeader)
     C.last((*C.char)(unsafe.Pointer(&buf[0])), lenght)
     _, err := aiRecObj.conn.Write(buf)
 
@@ -341,7 +341,7 @@ func method_entry() {
     var threadId = C.long(0)
     var startTime = C.longlong(0)
 
-    lenght = C.main4((*C.char)(unsafe.Pointer(&buf[0])), urlParameter, methodName, query_string, mid, flowpathinstance, threadId, startTime, lenght)
+    lenght = C.MethodEntry((*C.char)(unsafe.Pointer(&buf[0])), urlParameter, methodName, query_string, mid, flowpathinstance, threadId, startTime, lenght)
 
     a := C.CString(methodName1)
     b := C.CString(query_string1)
@@ -350,9 +350,9 @@ func method_entry() {
     defer C.free(unsafe.Pointer(b))
     defer C.free(unsafe.Pointer(c))
 
-    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), a, lenght, methodName)
-    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), b, lenght, query_string)
-    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), c, lenght, urlParameter)
+    lenght = C.ValueStore((*C.char)(unsafe.Pointer(&buf[0])), a, lenght, methodName)
+    lenght = C.ValueStore((*C.char)(unsafe.Pointer(&buf[0])), b, lenght, query_string)
+    lenght = C.ValueStore((*C.char)(unsafe.Pointer(&buf[0])), c, lenght, urlParameter)
 
     C.last((*C.char)(unsafe.Pointer(&buf[0])), lenght)
 
@@ -388,7 +388,7 @@ func method_exit() {
     var backend_header = C.int(len(backend_header1))
     var requestNotificationPhase = C.int(len(requestNotificationPhase1))
 
-    lenght = C.main5((*C.char)(unsafe.Pointer(&buf[0])), statusCode, mid, eventType, isCallout, duration, threadId, cpuTime, flowpathinstance, tierCallOutSeqNum, endTime, methodName, backend_header, requestNotificationPhase, lenght)
+    lenght = C.MethodExit((*C.char)(unsafe.Pointer(&buf[0])), statusCode, mid, eventType, isCallout, duration, threadId, cpuTime, flowpathinstance, tierCallOutSeqNum, endTime, methodName, backend_header, requestNotificationPhase, lenght)
     a := C.CString(methodName1)
     b := C.CString(backend_header1)
     c := C.CString(requestNotificationPhase1)
@@ -397,9 +397,9 @@ func method_exit() {
     defer C.free(unsafe.Pointer(b))
     defer C.free(unsafe.Pointer(c))
 
-    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), a, lenght, methodName)
-    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), b, lenght, backend_header)
-    lenght = C.main2((*C.char)(unsafe.Pointer(&buf[0])), c, lenght, requestNotificationPhase)
+    lenght = C.ValueStore((*C.char)(unsafe.Pointer(&buf[0])), a, lenght, methodName)
+    lenght = C.ValueStore((*C.char)(unsafe.Pointer(&buf[0])), b, lenght, backend_header)
+    lenght = C.ValueStore((*C.char)(unsafe.Pointer(&buf[0])), c, lenght, requestNotificationPhase)
 
     C.last((*C.char)(unsafe.Pointer(&buf[0])), lenght)
     _, err := aiRecObj.conn.Write(buf)
@@ -421,7 +421,7 @@ func end_business_transaction() {
     var flowpathinstance = C.longlong(0)
     var cpuTime = C.longlong(0)
 
-    lenght = C.main6((*C.char)(unsafe.Pointer(&buf[0])), statuscode, endTime, flowpathinstance, cpuTime, lenght)
+    lenght = C.EndTransaction((*C.char)(unsafe.Pointer(&buf[0])), statuscode, endTime, flowpathinstance, cpuTime, lenght)
     C.last((*C.char)(unsafe.Pointer(&buf[0])), lenght)
     _, err := aiRecObj.conn.Write(buf)
     fmt.Println("send data_end")

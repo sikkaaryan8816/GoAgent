@@ -26,12 +26,12 @@ func WrapHandler(handler interface{}) interface{} {
 		/*for _, listener := range listeners {
 			ctx = listener.HandlerStarted(ctx, msg)
 		}*/
-
+		UDPConnection()
 		//aws_request_id := "default_aws_request_id"
 		function_name := "http://10.20.0.85:81/PDO/pdo_test1.php"
 		url_path := function_name
 
-		create_start_transaction_message(url_path, "")
+		StartTransactionMessage(url_path, "")
 		//fmt.Println(bt)
 
 		//handle, handler_name, mpackage := "test", "Test", "TEST"
@@ -52,6 +52,7 @@ func WrapHandler(handler interface{}) interface{} {
 		//method_exit()
 		//end_business_transaction(bt)
 		//end_business_transaction()
+		CloseUDP()
 		coldStart = false
 		CurrentContext = nil
 		return result, err
@@ -103,6 +104,7 @@ func callHandler(ctx context.Context, msg json.RawMessage, handler interface{}) 
 
 	return response, errResponse
 }
+
 func unmarshalEventForHandler(ev json.RawMessage, handler interface{}) (reflect.Value, error) {
 	handlerType := reflect.TypeOf(handler)
 	if handlerType.NumIn() == 0 {
@@ -125,17 +127,3 @@ func unmarshalEventForHandler(ev json.RawMessage, handler interface{}) (reflect.
 	return newMessage, err
 }
 
-/*func start_business_transaction(bt_name, correlation_header string) {
-
-	message := create_start_transaction_message(ctx, bt_name, correlation_header)
-	udp_connection.send(massage, "start_fp")
-	bt := generate_bt()
-
-	return bt
-}
-func end_business_transaction(bt int64) {
-	message := create_end_transaction_message(context, bt, 200)
-	udp_connection.send(massage)
-	rc := 0
-	return rc
-}*/

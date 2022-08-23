@@ -111,8 +111,9 @@ func callHandler(ctx context.Context, event events.SQSEvent, handler interface{}
 	return response, errResponse
 }
 
-func unmarshalEventForHandler(event events.SQSEvent, handler interface{}) (reflect.Value, error) {
+func unmarshalEventForHandler(ev json.RawMessage, handler interface{}) (reflect.Value, error) {
 	handlerType := reflect.TypeOf(handler)
+	eh := events.SQSEvent{}
 	if handlerType.NumIn() == 0 {
 		return reflect.ValueOf(nil), nil
 	}
@@ -126,7 +127,7 @@ func unmarshalEventForHandler(event events.SQSEvent, handler interface{}) (refle
 	}
 
 	newMessage := reflect.New(messageType)
-	err := json.Unmarshal(event, &newMessage.Interface())
+	err := json.Unmarshal(ev, &eh)
 	if err != nil {
 		return reflect.ValueOf(nil), err
 	}

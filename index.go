@@ -22,6 +22,7 @@ func WrapHandler(handler interface{}) interface{} {
 
 	return func(ctx context.Context, msg json.RawMessage) (interface{}, error) {
 		//nolint
+		log.Println("context.FunctionName github",ctx.FunctionName)
 		ctx = context.WithValue(ctx, "cold_start", coldStart)
 		/*for _, listener := range listeners {
 			ctx = listener.HandlerStarted(ctx, msg)

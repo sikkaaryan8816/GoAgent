@@ -8,7 +8,7 @@ import (
 	"reflect"
 )
 
-//import "github.com/aws/aws-lambda-go/lambda"
+
 
 var (
 	// CurrentContext is the last create lambda context object.
@@ -27,7 +27,7 @@ func WrapHandler(handler interface{}) interface{} {
 			ctx = listener.HandlerStarted(ctx, msg)
 		}*/
 		UDPConnection()
-		//aws_request_id := "default_aws_request_id"
+		aws_request_id := "default_aws_request_id"
 		function_name := "http://10.20.0.85:81/PDO/pdo_test1.php"
 		url_path := function_name
 
@@ -38,20 +38,18 @@ func WrapHandler(handler interface{}) interface{} {
 
 		//fqmmethodentry := "handle.main.Test"
 
-		//method_entry(bt, fqmmethodentry)
-		method_entry()
-	        method_exit()
-		end_business_transaction()
+		method_entry(bt, fqmmethodentry)
+		
 		CurrentContext = ctx
 		result, err := callHandler(ctx, msg, handler)
 		/*for _, listener := range listeners {
 			listener.HandlerFinished(ctx, err)
 		}*/
-		//method_exit(bt, fqmmethodentry, 200)
+		method_exit(bt, fqmmethodentry, 200)
 		fmt.Println("exit begin")
-		//method_exit()
-		//end_business_transaction(bt)
-		//end_business_transaction()
+		
+		end_business_transaction(bt)
+		
 		CloseUDP()
 		coldStart = false
 		CurrentContext = nil

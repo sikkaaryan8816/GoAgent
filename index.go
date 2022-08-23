@@ -65,8 +65,8 @@ func WrapHandler(handler interface{}) interface{} {
 	}
 }
 
-func callHandler(ctx context.Context, msg json.RawMessage, handler interface{}) (interface{}, error) {
-	ev, err := unmarshalEventForHandler(msg, handler)
+func callHandler(ctx context.Context, event events.SQSEvent, handler interface{}) (interface{}, error) {
+	ev, err := unmarshalEventForHandler(event, handler)
 	if err != nil {
 		return nil, err
 	}
@@ -111,7 +111,7 @@ func callHandler(ctx context.Context, msg json.RawMessage, handler interface{}) 
 	return response, errResponse
 }
 
-func unmarshalEventForHandler(ev json.RawMessage, handler interface{}) (reflect.Value, error) {
+func unmarshalEventForHandler(event events.SQSEvent, handler interface{}) (reflect.Value, error) {
 	handlerType := reflect.TypeOf(handler)
 	if handlerType.NumIn() == 0 {
 		return reflect.ValueOf(nil), nil
@@ -126,7 +126,7 @@ func unmarshalEventForHandler(ev json.RawMessage, handler interface{}) (reflect.
 	}
 
 	newMessage := reflect.New(messageType)
-	err := json.Unmarshal(ev, newMessage.Interface())
+	err := json.Unmarshal(event, newMessage.Interface())
 	if err != nil {
 		return reflect.ValueOf(nil), err
 	}

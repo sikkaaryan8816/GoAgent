@@ -7,6 +7,7 @@ import (
 	"github.com/aws/aws-lambda-go/lambdacontext"
 	"github.com/aws/aws-lambda-go/events"
 	//"errors"
+	"log"
 	"reflect"
 )
 
@@ -47,7 +48,7 @@ func WrapHandler(handler interface{}) interface{} {
 		//method_entry(bt, fqmmethodentry)
 		method_entry()
 		CurrentContext = ctx
-		result, err := callHandler(ctx, msg, handler)
+		result, err := callHandler(ctx, event, handler)
 		/*for _, listener := range listeners {
 			listener.HandlerFinished(ctx, err)
 		}*/

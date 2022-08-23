@@ -232,7 +232,9 @@ var err error
 
 func NewAIRecord() *aiRecord {
     r := aiRecord{}
-    r.conn, err = net.Dial("udp", "66.220.31.147:1224")
+    ipAddeers := os.Getenv("CAV_APP_AGENT_PROXYIP")
+    port      := os.Getenv("CAV_APP_AGENT_PROXYPORT")
+    r.conn, err = net.Dial("udp", ipAddeers+":"+port)
     if err != nil {
         fmt.Printf("Some error %v", err)
     }

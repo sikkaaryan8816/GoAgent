@@ -6,7 +6,6 @@ import (
 	"fmt"
 	//"github.com/aws/aws-lambda-go/lambdacontext"
 	"github.com/aws/aws-lambda-go/events"
-	"
 	//"errors"
 	"log"
 	"reflect"

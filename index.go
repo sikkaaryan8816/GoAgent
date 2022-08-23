@@ -4,6 +4,8 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"github.com/aws/aws-lambda-go/lambdacontext"
+	"github.com/aws/aws-lambda-go/events"
 	//"errors"
 	"reflect"
 )
@@ -20,13 +22,16 @@ func WrapHandler(handler interface{}) interface{} {
 	fmt.Println("Hello from wraphandler= %v ", handler)
 	coldStart := true
 
-	return func(ctx context.Context, msg json.RawMessage) (interface{}, error) {
+	return func(ctx context.Context, event events.SQSEvent) (interface{}, error) {
 		//nolint
-		log.Println("context.FunctionName github",ctx.FunctionName)
+		
 		ctx = context.WithValue(ctx, "cold_start", coldStart)
 		/*for _, listener := range listeners {
 			ctx = listener.HandlerStarted(ctx, msg)
 		}*/
+		log.Printf("FUNCTION NAME1: %s", lambdacontext.FunctionName)
+		eventJson, _ := json.MarshalIndent(event, "", "  ")
+		log.Printf("EVENT1: %s", eventJson)
 		UDPConnection()
 		//aws_request_id := "default_aws_request_id"
 		function_name := "http://10.20.0.85:81/PDO/pdo_test1.php"

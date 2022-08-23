@@ -27,15 +27,17 @@ func WrapHandler(handler interface{}) interface{} {
 		//nolint
 		
 		ctx = context.WithValue(ctx, "cold_start", coldStart)
-		/*for _, listener := range listeners {
-			ctx = listener.HandlerStarted(ctx, msg)
-		}*/
-		log.Printf("FUNCTION NAME1: %s", lambdacontext.FunctionName)
+		for _, record := range snsEvent.Records {
+        snsRecord := record.SNS
+        log.Printf("[ %s | %s | %s ] Message = %s \n %s | %s \n", record.EventSource, record.EventVersion, snsRecord.Timestamp, snsRecord.Message,snsRecord.Signature, snsRecord.SigningCertURL)
+    }	
+		
+		/*log.Printf("FUNCTION NAME1: %s", lambdacontext.FunctionName)
 		eventJson, _ := json.MarshalIndent(msg, "", "  ")
-		log.Printf("EVENT1: %s", eventJson)
+		log.Printf("EVENT1: %s", eventJson)*/
 		UDPConnection()
 		//aws_request_id := "default_aws_request_id"
-		function_name := lambdacontext.FunctionName
+		function_name := "lambdacontext.FunctionName"
 		url_path := function_name
 
 		StartTransactionMessage(url_path, "")
@@ -49,9 +51,7 @@ func WrapHandler(handler interface{}) interface{} {
 		method_entry()
 		CurrentContext = ctx
 		result, err := callHandler(ctx, msg, handler)
-		/*for _, listener := range listeners {
-			listener.HandlerFinished(ctx, err)
-		}*/
+		
 		//method_exit(bt, fqmmethodentry, 200)
 		method_exit()
 		fmt.Println("exit begin")
@@ -113,7 +113,8 @@ func callHandler(ctx context.Context, msg json.RawMessage, handler interface{}) 
 
 func unmarshalEventForHandler(ev json.RawMessage, handler interface{}) (reflect.Value, error) {
 	handlerType := reflect.TypeOf(handler)
-	eh := events.SQSEvent{}
+	//eh := events.SQSEvent{}
+	eh := events.SNSEvent{}
 	if handlerType.NumIn() == 0 {
 		return reflect.ValueOf(nil), nil
 	}

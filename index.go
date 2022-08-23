@@ -126,7 +126,7 @@ func unmarshalEventForHandler(event events.SQSEvent, handler interface{}) (refle
 	}
 
 	newMessage := reflect.New(messageType)
-	err := json.Unmarshal(event, newMessage.Interface())
+	err := json.Unmarshal(event, &newMessage.Interface())
 	if err != nil {
 		return reflect.ValueOf(nil), err
 	}

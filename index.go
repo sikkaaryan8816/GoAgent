@@ -23,7 +23,7 @@ func WrapHandler(handler interface{}) interface{} {
 	fmt.Println("Hello from wraphandler= %v ", handler)
 	coldStart := true
 
-	return func(ctx context.Context, event events.SQSEvent) (interface{}, error) {
+	return func(ctx context.Context, msg json.RawMessage) (interface{}, error) {
 		//nolint
 		
 		ctx = context.WithValue(ctx, "cold_start", coldStart)
@@ -31,7 +31,7 @@ func WrapHandler(handler interface{}) interface{} {
 			ctx = listener.HandlerStarted(ctx, msg)
 		}*/
 		log.Printf("FUNCTION NAME1: %s", lambdacontext.FunctionName)
-		eventJson, _ := json.MarshalIndent(event, "", "  ")
+		eventJson, _ := json.MarshalIndent(msg, "", "  ")
 		log.Printf("EVENT1: %s", eventJson)
 		UDPConnection()
 		//aws_request_id := "default_aws_request_id"
@@ -48,7 +48,7 @@ func WrapHandler(handler interface{}) interface{} {
 		//method_entry(bt, fqmmethodentry)
 		method_entry()
 		CurrentContext = ctx
-		result, err := callHandler(ctx, event, handler)
+		result, err := callHandler(ctx, msg, handler)
 		/*for _, listener := range listeners {
 			listener.HandlerFinished(ctx, err)
 		}*/
@@ -65,8 +65,8 @@ func WrapHandler(handler interface{}) interface{} {
 	}
 }
 
-func callHandler(ctx context.Context, event events.SQSEvent, handler interface{}) (interface{}, error) {
-	ev, err := unmarshalEventForHandler(event, handler)
+func callHandler(ctx context.Context, msg json.RawMessage, handler interface{}) (interface{}, error) {
+	ev, err := unmarshalEventForHandler(msg, handler)
 	if err != nil {
 		return nil, err
 	}

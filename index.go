@@ -35,7 +35,7 @@ func WrapHandler(handler interface{}) interface{} {
 		log.Printf("EVENT1: %s", eventJson)
 		UDPConnection()
 		//aws_request_id := "default_aws_request_id"
-		function_name := "http://10.20.0.85:81/PDO/pdo_test1.php"
+		function_name := lambdacontext.FunctionName
 		url_path := function_name
 
 		StartTransactionMessage(url_path, "")

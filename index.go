@@ -27,6 +27,7 @@ func WrapHandler(handler interface{}) interface{} {
 		//nolint
 		
 		ctx = context.WithValue(ctx, "cold_start", coldStart)
+		/*?*/
 		/*for _, record := range SNSEvent.Records {
         		snsRecord := record.SNS
         log.Printf("[ %s | %s | %s ] Message = %s \n %s | %s \n", record.EventSource, record.EventVersion, snsRecord.Timestamp, snsRecord.Message,snsRecord.Signature, snsRecord.SigningCertURL)
